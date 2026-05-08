@@ -1,0 +1,1590 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Jewelry Farm — Premium Japanese Fruits</title>
+  <meta name="description" content="Japan's most exclusive premium fruit atelier. Fresh, dehydrated, and gift-curated Shine Muscat, Yubari Melon, White Peach, and rare seasonal jewels." />
+  <meta property="og:title" content="Jewelry Farm — Japanese Premium Fruits" />
+  <meta property="og:description" content="Nature's finest jewels, hand-cultivated across Japan's most celebrated growing regions." />
+  <meta property="og:image" content="https://images.unsplash.com/photo-1537640538966-79f369143f8f?w=1200&q=85" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=Shippori+Mincho:wght@400;500;600&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --gold: #b8986a;
+      --gold-light: #d4b483;
+      --ink: #0d0b08;
+      --cream: #faf7f2;
+      --red: #8b1a1a;
+      --text: #2a2318;
+      /* Mode theme vars — overridden per mode/fruit */
+      --mode-bg: #0d0b08;
+      --mode-accent: #b8986a;
+      --mode-accent-light: #d4b483;
+      --mode-wash: rgba(13,11,8,0.92);
+    }
+
+    html { scroll-behavior: smooth; }
+    body {
+      background: var(--ink);
+      color: var(--cream);
+      font-family: 'Cormorant Garamond', Georgia, serif;
+      overflow-x: hidden;
+      cursor: auto;
+    }
+    @media (hover: hover) and (pointer: fine) {
+      body { cursor: none; }
+    }
+
+    /* ─── CURSOR ─── */
+    .cursor { position: fixed; width: 10px; height: 10px; background: var(--gold); border-radius: 50%; pointer-events: none; z-index: 9999; transform: translate(-50%,-50%); mix-blend-mode: difference; display: none; }
+    .cursor-ring { position: fixed; width: 36px; height: 36px; border: 1px solid var(--gold); border-radius: 50%; pointer-events: none; z-index: 9998; transform: translate(-50%,-50%); opacity: .6; transition: width .3s, height .3s, opacity .3s; display: none; }
+    .cursor-ring.expanded { width: 60px; height: 60px; opacity: .3; }
+    @media (hover: hover) and (pointer: fine) {
+      .cursor { display: block; }
+      .cursor-ring { display: block; }
+    }
+
+    /* ─── NAV ─── */
+    nav { position: fixed; top: 0; left: 0; right: 0; z-index: 200; display: flex; align-items: center; justify-content: space-between; padding: 28px 48px; transition: background .4s; }
+    nav.scrolled { background: rgba(13,11,8,.92); backdrop-filter: blur(12px); padding: 18px 48px; }
+    nav::before { content: ''; position: absolute; inset: 0; background: linear-gradient(to bottom, rgba(13,11,8,.75) 0%, transparent 100%); pointer-events: none; }
+    .nav-logo { position: relative; font-family: 'Shippori Mincho', serif; font-size: 13px; letter-spacing: .35em; color: var(--gold-light); text-transform: uppercase; cursor: pointer; }
+    .nav-logo span { display: block; font-family: 'Cormorant Garamond', serif; font-size: 9px; letter-spacing: .5em; color: var(--gold); margin-top: 3px; }
+    .nav-links { position: relative; display: flex; gap: 36px; list-style: none; }
+    .nav-links a { font-size: 10px; letter-spacing: .3em; text-transform: uppercase; color: rgba(240,228,200,.75); text-decoration: none; transition: color .3s; cursor: pointer; }
+    .nav-links a:hover { color: var(--gold-light); }
+    /* Mode switcher tabs in nav */
+    .nav-modes { position: relative; display: flex; gap: 4px; }
+    .mode-tab { font-size: 9px; letter-spacing: .3em; text-transform: uppercase; padding: 8px 16px; border: 1px solid rgba(240,228,200,.2); background: transparent; color: rgba(240,228,200,.5); cursor: pointer; transition: all .3s; font-family: 'Cormorant Garamond', serif; }
+    .mode-tab.active { border-color: var(--gold); color: var(--gold-light); background: rgba(184,152,106,.1); }
+    .mode-tab:hover:not(.active) { border-color: rgba(240,228,200,.4); color: rgba(240,228,200,.8); }
+    @media (max-width: 768px) { nav { padding: 20px 24px; } nav.scrolled { padding: 14px 24px; } .nav-links { display: none; } .nav-modes { display: none; } }
+    /* ─── MOBILE MENU ─── */
+    #mobileMenuBtn {
+      display: none; background: transparent; border: 1px solid rgba(240,228,200,.3);
+      color: var(--cream); cursor: pointer; padding: 8px 12px; font-size: 18px; line-height: 1;
+    }
+    @media (max-width: 768px) { #mobileMenuBtn { display: flex; align-items: center; justify-content: center; } }
+    #mobileMenu {
+      display: none; position: fixed; inset: 0; z-index: 500;
+      background: rgba(13,11,8,.97); backdrop-filter: blur(12px);
+      flex-direction: column; align-items: center; justify-content: center; gap: 32px;
+    }
+    #mobileMenu.open { display: flex; }
+    #mobileMenu a, #mobileMenu button.mob-mode-tab {
+      font-size: 28px; letter-spacing: .15em; color: var(--cream); text-decoration: none; background: transparent;
+      border: none; cursor: pointer; font-family: 'Cormorant Garamond', serif; font-weight: 300; transition: color .3s;
+    }
+    #mobileMenu a:hover, #mobileMenu button.mob-mode-tab:hover { color: var(--gold-light); }
+    #mobileMenu .mob-divider { width: 40px; height: 1px; background: rgba(184,152,106,.25); }
+    #mobileMenu .mob-close { position: absolute; top: 28px; right: 24px; background: transparent; border: none; color: rgba(240,228,200,.5); font-size: 28px; cursor: pointer; font-family: 'Cormorant Garamond', serif; }
+    #mobileMenu .mob-close:hover { color: var(--gold); }
+
+    /* ════════════════════════════════════════
+       HERO — HORIZONTAL DRAG CAROUSEL
+       ════════════════════════════════════════ */
+    #hero { position: relative; width: 100vw; height: 100vh; overflow: hidden; }
+    #heroAtmos { position: absolute; inset: 0; z-index: 0; transition: background 1.1s cubic-bezier(.4,0,.2,1); }
+    #hero::before, #hero::after { display: none !important; }
+    #heroAtmos::before, #heroAtmos::after { display: none !important; }
+    #heroTrack { position: absolute; inset: 0; z-index: 1; display: flex; will-change: transform; }
+    #heroTrack.snapping { transition: transform .55s cubic-bezier(.4,0,.2,1); }
+    .hero-slide { position: relative; flex: 0 0 100vw; width: 100vw; height: 100vh; display: flex; align-items: center; justify-content: center; overflow: hidden; }
+    .slide-atmos { position: absolute; inset: 0; background-size: cover; background-position: center; filter: brightness(.28) saturate(.55); transition: filter 1s ease; }
+    .slide-fruit { position: relative; z-index: 2; width: min(340px,70vw); height: min(440px,80vh); display: flex; align-items: center; justify-content: center; transform: translateY(20px) scale(.94); opacity: 0; transition: transform .9s cubic-bezier(.34,1.4,.64,1) .1s, opacity .7s ease .1s; }
+    .hero-slide.active .slide-fruit { opacity: 1; transform: translateY(0) scale(1); }
+    .slide-fruit img { width: 100%; height: 100%; object-fit: contain; filter: drop-shadow(0 40px 80px rgba(0,0,0,.7)); }
+    .slide-reflection { position: absolute; bottom: 0; left: 50%; transform: translateX(-50%); width: min(340px,70vw); height: 80px; z-index: 2; background: linear-gradient(to bottom, rgba(255,255,255,.04), transparent); }
+    .hero-vignette { position: absolute; inset: 0; z-index: 3; pointer-events: none; background: radial-gradient(ellipse at center, transparent 38%, rgba(13,11,8,.6) 100%), linear-gradient(to top, rgba(13,11,8,.95) 0%, transparent 40%); }
+
+    /* Mode badge on hero */
+    #heroModeBadge {
+      position: absolute; top: 100px; right: 48px; z-index: 20;
+      font-size: 8px; letter-spacing: .5em; text-transform: uppercase;
+      color: var(--gold); border: 1px solid rgba(184,152,106,.4);
+      padding: 7px 16px; pointer-events: none;
+      transition: opacity .4s;
+    }
+    @media (max-width: 768px) { #heroModeBadge { right: 20px; top: 72px; } }
+
+    /* Bottom UI */
+    .hero-ui { position: absolute; bottom: 0; left: 0; right: 0; z-index: 10; padding: 0 48px 52px; display: flex; align-items: flex-end; justify-content: space-between; }
+    @media (max-width: 768px) { .hero-ui { padding: 0 20px 44px; flex-direction: column; align-items: center; gap: 16px; } }
+    .hero-label-box { border: 2px solid rgba(240,228,200,.9); padding: 10px 32px; display: inline-block; margin-bottom: 10px; }
+    .hero-label-text { font-family: 'Cormorant Garamond', serif; font-size: clamp(26px,5vw,52px); font-weight: 500; font-style: italic; letter-spacing: .08em; text-transform: uppercase; color: var(--cream); display: block; transition: opacity .35s, transform .35s; }
+    .hero-label-text.switching { opacity: 0; transform: translateY(8px); }
+    .hero-sub { font-size: 10px; letter-spacing: .45em; text-transform: uppercase; color: rgba(240,228,200,.55); margin-top: 6px; transition: opacity .35s; }
+    .hero-sub.switching { opacity: 0; }
+    .hero-nav-center { display: flex; flex-direction: column; align-items: center; gap: 14px; }
+    .hero-arrows { display: flex; gap: 4px; }
+    .arrow-btn { width: 64px; height: 48px; border: 1px solid rgba(240,228,200,.3); background: transparent; color: var(--cream); cursor: pointer; font-size: 18px; display: flex; align-items: center; justify-content: center; transition: border-color .3s, background .3s; font-family: 'Cormorant Garamond', serif; }
+    .arrow-btn:hover { border-color: var(--gold); background: rgba(184,152,106,.1); }
+    .arrow-btn.center-btn { width: 72px; border-color: rgba(240,228,200,.5); background: rgba(240,228,200,.05); }
+    .drag-hint { font-size: 8px; letter-spacing: .4em; text-transform: uppercase; color: rgba(240,228,200,.3); text-align: center; line-height: 1.6; }
+    .hero-meta { text-align: right; transition: opacity .35s, transform .35s; }
+    .hero-meta.switching { opacity: 0; transform: translateX(10px); }
+    .meta-price { font-size: 22px; font-weight: 300; color: var(--gold-light); letter-spacing: .1em; }
+    .meta-origin { font-family: 'Shippori Mincho', serif; font-size: 11px; color: rgba(240,228,200,.4); letter-spacing: .25em; margin-top: 4px; }
+    .meta-scroll-hint { font-size: 8px; letter-spacing: .4em; text-transform: uppercase; color: rgba(240,228,200,.25); margin-top: 16px; }
+    .scroll-arrow { display: block; margin-top: 6px; font-size: 14px; color: rgba(184,152,106,.5); animation: scrollBounce 2s ease-in-out infinite; }
+    @keyframes scrollBounce { 0%,100% { transform: translateY(0); opacity: .4; } 50% { transform: translateY(6px); opacity: .9; } }
+
+    /* ════════════════════════════════════════
+       PAGE MODES
+       ════════════════════════════════════════ */
+    body.fruit-selected #defaultPage { display: none; }
+    body.fruit-selected #giftPage { display: none; }
+    body.fruit-selected #dehydratedPage { display: none; }
+    body.fruit-selected #fruitPage { display: block; }
+
+    body.mode-gift #defaultPage { display: none; }
+    body.mode-gift #fruitPage { display: none; }
+    body.mode-gift #dehydratedPage { display: none; }
+    body.mode-gift #giftPage { display: block; }
+
+    body.mode-dehydrated #defaultPage { display: none; }
+    body.mode-dehydrated #fruitPage { display: none; }
+    body.mode-dehydrated #giftPage { display: none; }
+    body.mode-dehydrated #dehydratedPage { display: block; }
+
+    #fruitPage { display: none; }
+    #giftPage { display: none; }
+    #dehydratedPage { display: none; }
+
+    /* Back button */
+    #backBtn {
+      display: none; position: fixed; top: 90px; left: 48px; z-index: 201;
+      font-size: 10px; letter-spacing: .35em; text-transform: uppercase;
+      color: rgba(240,228,200,.6); background: transparent; border: 1px solid rgba(240,228,200,.25);
+      padding: 10px 20px; cursor: pointer; transition: color .3s, border-color .3s; font-family: 'Cormorant Garamond', serif;
+    }
+    #backBtn:hover { color: var(--gold-light); border-color: var(--gold); }
+    body.fruit-selected #backBtn { display: block; }
+    @media (max-width: 768px) { #backBtn { left: 20px; top: 72px; } }
+
+    /* ════════════════════════════════════════
+       FEATURE SCROLL STORY CHAPTERS
+       ════════════════════════════════════════ */
+    .feature-chapter { position: relative; width: 100vw; height: 100vh; overflow: hidden; display: flex; align-items: center; justify-content: center; }
+    .chapter-bg { position: absolute; inset: 0; background-size: cover; background-position: center; transform: scale(1.05); transition: transform 8s ease-out; }
+    .feature-chapter.in-view .chapter-bg { transform: scale(1); }
+    .chapter-color-wash { position: absolute; inset: 0; }
+    .chapter-vignette { position: absolute; inset: 0; pointer-events: none; background: linear-gradient(to right, rgba(13,11,8,.65) 0%, transparent 65%); }
+    .chapter-content { position: relative; z-index: 2; padding: 0 10vw; max-width: 520px; }
+    .chapter-tag { font-size: 9px; letter-spacing: .5em; text-transform: uppercase; color: var(--gold); margin-bottom: 20px; display: block; }
+    .chapter-headline { font-size: clamp(32px,5vw,64px); font-weight: 300; line-height: 1.1; color: var(--cream); opacity: 0; transform: translateX(-30px); transition: opacity .9s ease, transform .9s ease; }
+    .chapter-headline em { font-style: italic; color: var(--gold-light); }
+    .feature-chapter.in-view .chapter-headline { opacity: 1; transform: translateX(0); }
+    .chapter-body { font-size: 16px; line-height: 1.9; font-weight: 300; color: rgba(240,228,200,.65); margin-top: 20px; max-width: 420px; opacity: 0; transform: translateX(-20px); transition: opacity .9s ease .15s, transform .9s ease .15s; }
+    .feature-chapter.in-view .chapter-body { opacity: 1; transform: translateX(0); }
+    .chapter-jp { font-family: 'Shippori Mincho', serif; font-size: 12px; color: rgba(240,228,200,.25); letter-spacing: .15em; margin-top: 16px; opacity: 0; transition: opacity .9s ease .3s; }
+    .feature-chapter.in-view .chapter-jp { opacity: 1; }
+    .chapter-fruit-wrap { position: absolute; right: -40px; top: 50%; transform: translateY(-50%) translateX(60px) scale(.9); opacity: 0; width: min(400px,50vw); height: min(520px,90vh); transition: opacity .9s ease .2s, transform .9s cubic-bezier(.34,1.2,.64,1) .2s; }
+    .feature-chapter.in-view .chapter-fruit-wrap { opacity: 1; transform: translateY(-50%) translateX(0) scale(1); }
+    .chapter-fruit-wrap img { width: 100%; height: 100%; object-fit: contain; filter: drop-shadow(0 30px 60px rgba(0,0,0,.6)); }
+    @media (max-width: 768px) {
+      .chapter-fruit-wrap { position: absolute; bottom: 0; right: 50%; transform: translateX(50%) translateY(30px); width: 70vw; height: 50vh; top: auto; opacity: .3; }
+      .feature-chapter.in-view .chapter-fruit-wrap { transform: translateX(50%) translateY(0); opacity: .3; }
+      .chapter-content { padding: 0 24px; max-width: 100%; }
+    }
+
+    /* ════════════════════════════════════════
+       DEFAULT PAGE — full catalogue
+       ════════════════════════════════════════ */
+    .featured { background: var(--ink); padding: 120px 80px; }
+    @media (max-width: 768px) { .featured { padding: 80px 24px; } }
+    .section-header { display: flex; align-items: flex-end; justify-content: space-between; margin-bottom: 64px; }
+    .section-title { font-size: clamp(36px,4vw,58px); font-weight: 300; line-height: 1; }
+    .section-title em { font-style: italic; color: var(--gold-light); }
+    .section-sub { font-size: 10px; letter-spacing: .4em; text-transform: uppercase; color: var(--gold); margin-bottom: 8px; }
+    .section-link { font-size: 10px; letter-spacing: .3em; text-transform: uppercase; color: rgba(240,228,200,.5); text-decoration: none; border-bottom: 1px solid rgba(240,228,200,.2); padding-bottom: 2px; transition: color .3s, border-color .3s; }
+    .section-link:hover { color: var(--gold-light); border-color: var(--gold-light); }
+    .fruit-grid { display: grid; grid-template-columns: 1.6fr 1fr 1fr; grid-template-rows: auto auto; gap: 3px; }
+    @media (max-width: 768px) { .fruit-grid { grid-template-columns: 1fr; } .fruit-card.large { grid-row: span 1; } }
+    .fruit-card { position: relative; overflow: hidden; background: #1a1712; cursor: pointer; }
+    @media (hover: hover) and (pointer: fine) { .fruit-card { cursor: none; } }
+    .fruit-card.large { grid-row: span 2; }
+    .fruit-card img { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform .8s cubic-bezier(.25,.46,.45,.94), filter .6s; filter: brightness(.75) saturate(1.1); }
+    .fruit-card:hover img { transform: scale(1.07); filter: brightness(.6) saturate(1.3); }
+    .fruit-card.large img { height: 680px; }
+    .fruit-card:not(.large) img { height: 338px; }
+    @media (max-width: 768px) { .fruit-card.large img { height: 380px; } .fruit-card:not(.large) img { height: 260px; } }
+    .fruit-overlay { position: absolute; inset: 0; background: linear-gradient(to top, rgba(13,11,8,.85) 0%, rgba(13,11,8,.1) 50%, transparent 100%); display: flex; flex-direction: column; justify-content: flex-end; padding: 32px; transition: background .4s; }
+    .fruit-card:hover .fruit-overlay { background: linear-gradient(to top, rgba(13,11,8,.92) 0%, rgba(13,11,8,.3) 60%, transparent 100%); }
+    .fruit-tag { font-size: 9px; letter-spacing: .45em; text-transform: uppercase; color: var(--gold); margin-bottom: 10px; }
+    .fruit-name { font-size: 28px; font-weight: 300; line-height: 1.1; color: var(--cream); }
+    .fruit-name .jp-name { display: block; font-family: 'Shippori Mincho', serif; font-size: 14px; color: rgba(240,228,200,.5); letter-spacing: .2em; margin-top: 4px; }
+    .fruit-price { margin-top: 14px; font-size: 13px; letter-spacing: .2em; color: var(--gold-light); opacity: 0; transform: translateY(8px); transition: opacity .3s .1s, transform .3s .1s; }
+    .fruit-card:hover .fruit-price { opacity: 1; transform: translateY(0); }
+    .fruit-card.large .fruit-name { font-size: 44px; }
+
+    /* Philosophy */
+    .philosophy { background: #f2ede4; color: var(--text); padding: 160px 80px; display: grid; grid-template-columns: 1fr 1fr; gap: 120px; align-items: center; }
+    @media (max-width: 768px) { .philosophy { grid-template-columns: 1fr; gap: 60px; padding: 80px 24px; } }
+    .phil-media { position: relative; }
+    .phil-img { width: 100%; aspect-ratio: 3/4; object-fit: cover; display: block; }
+    .phil-accent { position: absolute; top: -24px; left: -24px; right: 24px; bottom: 24px; border: 1px solid var(--gold); pointer-events: none; }
+    .phil-number { position: absolute; bottom: -20px; right: -20px; font-size: 120px; font-weight: 300; line-height: 1; color: transparent; -webkit-text-stroke: 1px var(--gold); opacity: .25; }
+    .phil-eyebrow { font-size: 9px; letter-spacing: .5em; text-transform: uppercase; color: var(--gold); margin-bottom: 28px; }
+    .phil-title { font-size: clamp(38px,3.5vw,58px); font-weight: 300; line-height: 1.1; color: var(--text); margin-bottom: 28px; }
+    .phil-title em { font-style: italic; color: var(--red); }
+    .phil-body { font-size: 17px; line-height: 1.9; color: rgba(42,35,24,.7); font-weight: 300; margin-bottom: 20px; }
+    .phil-body-jp { font-family: 'Shippori Mincho', serif; font-size: 13px; line-height: 2.2; color: rgba(42,35,24,.4); letter-spacing: .05em; margin-top: 24px; }
+    .phil-stats { display: flex; gap: 48px; margin-top: 48px; padding-top: 40px; border-top: 1px solid rgba(184,152,106,.3); }
+    .stat-num { font-size: 44px; font-weight: 300; color: var(--text); line-height: 1; }
+    .stat-label { font-size: 9px; letter-spacing: .4em; text-transform: uppercase; color: var(--gold); margin-top: 6px; }
+
+    /* Banner */
+    .banner { position: relative; height: 70vh; min-height: 500px; overflow: hidden; display: flex; align-items: center; justify-content: center; }
+    .banner-bg { position: absolute; inset: 0; background-image: url('https://images.unsplash.com/photo-1542051841857-5f90071e7989?w=1800&q=90&auto=format&fit=crop'); background-size: cover; background-position: center 40%; filter: brightness(.4) saturate(1.3); }
+    .banner-content { position: relative; z-index: 2; text-align: center; padding: 0 40px; }
+    .banner-quote { font-size: clamp(28px,4vw,60px); font-weight: 300; font-style: italic; line-height: 1.3; color: var(--cream); max-width: 900px; margin: 0 auto 20px; }
+    .banner-attribution { font-size: 10px; letter-spacing: .5em; text-transform: uppercase; color: var(--gold); }
+
+    /* Season */
+    .season { background: var(--ink); padding: 120px 80px; }
+    @media (max-width: 768px) { .season { padding: 80px 24px; } }
+    .season-strip { display: grid; grid-template-columns: repeat(4,1fr); gap: 3px; }
+    @media (max-width: 768px) { .season-strip { grid-template-columns: repeat(2,1fr); } }
+    .season-item { position: relative; overflow: hidden; cursor: pointer; }
+    @media (hover: hover) and (pointer: fine) { .season-item { cursor: none; } }
+    .season-item img { width: 100%; height: 480px; object-fit: cover; display: block; transition: transform .7s ease, filter .5s; filter: brightness(.72) saturate(1.1); }
+    @media (max-width: 768px) { .season-item img { height: 280px; } }
+    .season-item:hover img { transform: scale(1.05); filter: brightness(.55) saturate(1.3); }
+    .season-badge { position: absolute; top: 20px; left: 20px; font-size: 8px; letter-spacing: .4em; text-transform: uppercase; background: var(--gold); color: var(--ink); padding: 5px 12px; }
+    .season-overlay { position: absolute; bottom: 0; left: 0; right: 0; padding: 28px 24px; background: linear-gradient(to top, rgba(13,11,8,.9) 0%, transparent 100%); }
+    .season-fruit { font-size: 20px; font-weight: 300; color: var(--cream); }
+    .season-origin { font-family: 'Shippori Mincho', serif; font-size: 11px; color: rgba(240,228,200,.45); letter-spacing: .2em; margin-top: 4px; }
+    .season-price { font-size: 12px; color: var(--gold-light); letter-spacing: .15em; margin-top: 8px; }
+
+    /* Process */
+    .process { background: #f2ede4; padding: 140px 80px; }
+    @media (max-width: 768px) { .process { padding: 80px 24px; } }
+    .process-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 64px; }
+    @media (max-width: 768px) { .process-grid { grid-template-columns: 1fr; gap: 48px; } }
+    .step-num { font-size: 80px; font-weight: 300; color: transparent; -webkit-text-stroke: 1px rgba(184,152,106,.4); line-height: 1; margin-bottom: 24px; }
+    .step-title { font-size: 32px; font-weight: 300; line-height: 1.1; color: var(--text); margin-bottom: 20px; }
+    .step-title em { font-style: italic; color: var(--red); }
+    .step-body { font-size: 15px; line-height: 1.85; color: rgba(42,35,24,.65); font-weight: 300; }
+    .step-jp { font-family: 'Shippori Mincho', serif; font-size: 11px; color: rgba(42,35,24,.3); letter-spacing: .1em; margin-top: 20px; }
+
+    /* Showcase */
+    .showcase { display: grid; grid-template-columns: repeat(3,1fr); }
+    @media (max-width: 768px) { .showcase { grid-template-columns: 1fr; } }
+    .showcase-panel { position: relative; overflow: hidden; cursor: pointer; }
+    @media (hover: hover) and (pointer: fine) { .showcase-panel { cursor: none; } }
+    .showcase-panel img { width: 100%; height: 600px; object-fit: cover; display: block; transition: transform .8s ease, filter .6s; filter: brightness(.7) saturate(1.1); }
+    .showcase-panel:hover img { transform: scale(1.05); filter: brightness(.5) saturate(1.3); }
+    .showcase-info { position: absolute; bottom: 32px; left: 32px; right: 32px; }
+    .showcase-fruit { font-size: 26px; font-weight: 300; color: var(--cream); }
+    .showcase-origin { font-family: 'Shippori Mincho', serif; font-size: 11px; color: rgba(240,228,200,.45); letter-spacing: .2em; margin-top: 4px; }
+    .showcase-price { font-size: 13px; color: var(--gold-light); letter-spacing: .15em; margin-top: 10px; }
+
+    /* Footer */
+    footer { background: #0a0906; padding: 80px 80px 48px; border-top: 1px solid rgba(184,152,106,.15); }
+    @media (max-width: 768px) { footer { padding: 60px 24px 40px; } }
+    .footer-top { display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 64px; margin-bottom: 72px; }
+    @media (max-width: 768px) { .footer-top { grid-template-columns: 1fr; gap: 32px; } }
+    .footer-brand-name { font-family: 'Shippori Mincho', serif; font-size: 20px; color: var(--gold-light); letter-spacing: .3em; margin-bottom: 8px; }
+    .footer-brand-sub { font-size: 9px; letter-spacing: .4em; text-transform: uppercase; color: var(--gold); margin-bottom: 20px; }
+    .footer-desc { font-size: 14px; line-height: 1.8; color: rgba(240,228,200,.35); font-weight: 300; max-width: 300px; }
+    .footer-col-title { font-size: 9px; letter-spacing: .5em; text-transform: uppercase; color: var(--gold); margin-bottom: 24px; }
+    .footer-links { list-style: none; }
+    .footer-links li { margin-bottom: 12px; }
+    .footer-links a { font-size: 14px; color: rgba(240,228,200,.4); text-decoration: none; transition: color .3s; }
+    .footer-links a:hover { color: var(--gold-light); }
+    .footer-bottom { display: flex; justify-content: space-between; align-items: center; padding-top: 32px; border-top: 1px solid rgba(184,152,106,.1); }
+    .footer-copy { font-size: 10px; letter-spacing: .3em; text-transform: uppercase; color: rgba(240,228,200,.2); }
+    .footer-jp { font-family: 'Shippori Mincho', serif; font-size: 12px; color: rgba(184,152,106,.3); letter-spacing: .2em; }
+
+    /* Scroll reveal */
+    .reveal { opacity: 0; transform: translateY(30px); transition: opacity .9s ease, transform .9s ease; }
+    .reveal.visible { opacity: 1; transform: translateY(0); }
+
+    /* View All CTA */
+    .view-all-cta { background: var(--ink); padding: 100px 80px; text-align: center; border-top: 1px solid rgba(184,152,106,.12); }
+    @media (max-width: 768px) { .view-all-cta { padding: 72px 24px; } }
+    .view-all-cta .cta-label { font-size: 9px; letter-spacing: .6em; text-transform: uppercase; color: var(--gold); margin-bottom: 24px; display: block; }
+    .view-all-cta .cta-title { font-size: clamp(32px,4vw,58px); font-weight: 300; color: var(--cream); line-height: 1.1; margin-bottom: 12px; }
+    .view-all-cta .cta-title em { font-style: italic; color: var(--gold-light); }
+    .view-all-cta .cta-sub { font-family: 'Shippori Mincho', serif; font-size: 13px; color: rgba(240,228,200,.3); letter-spacing: .2em; margin-bottom: 48px; }
+    .view-all-cta .cta-btn { display: inline-block; padding: 18px 56px; border: 1px solid var(--gold); color: var(--gold-light); font-size: 10px; letter-spacing: .5em; text-transform: uppercase; background: transparent; cursor: pointer; transition: background .35s, color .35s; font-family: 'Cormorant Garamond', serif; }
+    .view-all-cta .cta-btn:hover { background: var(--gold); color: var(--ink); }
+    .view-all-cta .cta-divider { width: 1px; height: 64px; background: rgba(184,152,106,.25); margin: 0 auto 48px; }
+
+    /* Fruit page single-product */
+    .fruit-hero-panel { position: relative; width: 100vw; height: 60vh; min-height: 420px; overflow: hidden; display: flex; align-items: flex-end; }
+    .fruit-hero-bg { position: absolute; inset: 0; background-size: cover; background-position: center; filter: brightness(.3) saturate(.7); }
+    .fruit-hero-wash { position: absolute; inset: 0; }
+    .fruit-hero-vignette { position: absolute; inset: 0; background: linear-gradient(to top, rgba(13,11,8,1) 0%, transparent 55%); }
+    .fruit-hero-content { position: relative; z-index: 2; padding: 0 80px 56px; }
+    @media (max-width: 768px) { .fruit-hero-content { padding: 0 24px 48px; } }
+    .fruit-hero-tag { font-size: 9px; letter-spacing: .5em; text-transform: uppercase; color: var(--gold); margin-bottom: 16px; }
+    .fruit-hero-name { font-size: clamp(48px,8vw,100px); font-weight: 300; line-height: .95; color: var(--cream); }
+    .fruit-hero-name em { font-style: italic; }
+    .fruit-hero-jp { font-family: 'Shippori Mincho', serif; font-size: 14px; letter-spacing: .3em; color: rgba(240,228,200,.4); margin-top: 12px; }
+    .fruit-hero-price { font-size: 18px; letter-spacing: .15em; margin-top: 20px; }
+
+    /* ════════════════════════════════════════
+       DEHYDRATED MODE
+       ════════════════════════════════════════ */
+    #dehydratedPage { background: #1a1208; }
+    .dehyd-hero { position: relative; height: 80vh; min-height: 560px; overflow: hidden; display: flex; align-items: flex-end; }
+    .dehyd-hero-bg { position: absolute; inset: 0; background: url('https://images.unsplash.com/photo-1610832958506-aa56368176cf?w=1800&q=90') center/cover; filter: brightness(.35) saturate(.6) sepia(.3); }
+    .dehyd-hero-wash { position: absolute; inset: 0; background: linear-gradient(135deg, rgba(26,18,8,.95) 0%, rgba(26,18,8,.5) 100%); }
+    .dehyd-hero-content { position: relative; z-index: 2; padding: 0 80px 80px; max-width: 700px; }
+    @media (max-width: 768px) { .dehyd-hero-content { padding: 0 24px 60px; } }
+    .dehyd-eyebrow { font-size: 9px; letter-spacing: .6em; text-transform: uppercase; color: #c9a55a; margin-bottom: 20px; display: block; }
+    .dehyd-title { font-size: clamp(42px,7vw,96px); font-weight: 300; line-height: .95; color: #faf0dc; margin-bottom: 16px; }
+    .dehyd-title em { font-style: italic; color: #c9a55a; }
+    .dehyd-jp { font-family: 'Shippori Mincho', serif; font-size: 13px; letter-spacing: .3em; color: rgba(201,165,90,.5); margin-bottom: 32px; display: block; }
+    .dehyd-desc { font-size: 16px; line-height: 1.9; color: rgba(250,240,220,.55); max-width: 480px; }
+    .dehyd-products { background: #1a1208; padding: 100px 80px; }
+    @media (max-width: 768px) { .dehyd-products { padding: 80px 24px; } }
+    .dehyd-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 3px; margin-top: 56px; }
+    @media (max-width: 768px) { .dehyd-grid { grid-template-columns: 1fr; } }
+    .dehyd-card { position: relative; overflow: hidden; background: #221a0e; cursor: pointer; }
+    @media (hover: hover) and (pointer: fine) { .dehyd-card { cursor: none; } }
+    .dehyd-card img { width: 100%; height: 420px; object-fit: cover; display: block; transition: transform .8s ease, filter .6s; filter: brightness(.7) saturate(.8) sepia(.2); }
+    .dehyd-card:hover img { transform: scale(1.06); filter: brightness(.55) saturate(.9) sepia(.2); }
+    .dehyd-card-overlay { position: absolute; inset: 0; background: linear-gradient(to top, rgba(26,18,8,.92) 0%, transparent 60%); display: flex; flex-direction: column; justify-content: flex-end; padding: 32px; }
+    .dehyd-label { font-size: 9px; letter-spacing: .45em; text-transform: uppercase; color: #c9a55a; margin-bottom: 8px; }
+    .dehyd-name { font-size: 26px; font-weight: 300; color: #faf0dc; line-height: 1.1; }
+    .dehyd-name-jp { font-family: 'Shippori Mincho', serif; font-size: 12px; color: rgba(201,165,90,.6); letter-spacing: .2em; margin-top: 4px; display: block; }
+    .dehyd-price { font-size: 13px; color: #c9a55a; letter-spacing: .15em; margin-top: 12px; opacity: 0; transform: translateY(8px); transition: opacity .3s, transform .3s; }
+    .dehyd-card:hover .dehyd-price { opacity: 1; transform: translateY(0); }
+    .dehyd-process { background: #120e06; padding: 120px 80px; display: grid; grid-template-columns: 1fr 1fr; gap: 100px; align-items: center; }
+    @media (max-width: 768px) { .dehyd-process { grid-template-columns: 1fr; gap: 60px; padding: 80px 24px; } }
+    .dehyd-process-img { position: relative; }
+    .dehyd-process-img img { width: 100%; aspect-ratio: 4/5; object-fit: cover; display: block; filter: sepia(.3) brightness(.8); }
+    .dehyd-process-content { color: #faf0dc; }
+    .dehyd-process-content .section-sub { color: #c9a55a; }
+    .dehyd-process-content .section-title em { color: #c9a55a; }
+    .dehyd-process-content p { font-size: 16px; line-height: 1.9; color: rgba(250,240,220,.55); margin-bottom: 20px; }
+
+    /* ════════════════════════════════════════
+       GIFT MODE — Sembikiya-inspired
+       ════════════════════════════════════════ */
+    #giftPage { background: #0d0b08; }
+    .gift-hero { position: relative; height: 85vh; min-height: 580px; overflow: hidden; display: grid; grid-template-columns: 1fr 1fr; }
+    @media (max-width: 768px) { .gift-hero { grid-template-columns: 1fr; } }
+    .gift-hero-left { display: flex; flex-direction: column; justify-content: flex-end; padding: 100px 72px; background: #f5ede0; position: relative; }
+    @media (max-width: 768px) { .gift-hero-left { padding: 80px 24px 48px; } }
+    .gift-hero-eyebrow { font-size: 9px; letter-spacing: .6em; text-transform: uppercase; color: #8b6a2a; margin-bottom: 24px; }
+    .gift-hero-title { font-size: clamp(44px,6vw,80px); font-weight: 300; line-height: .95; color: #1a1208; margin-bottom: 16px; }
+    .gift-hero-title em { font-style: italic; color: #8b4a1a; }
+    .gift-hero-jp { font-family: 'Shippori Mincho', serif; font-size: 13px; letter-spacing: .3em; color: #8b6a2a; opacity: .7; margin-bottom: 36px; }
+    .gift-hero-desc { font-size: 15px; line-height: 1.9; color: rgba(26,18,8,.6); max-width: 380px; }
+    .gift-hero-right { position: relative; overflow: hidden; }
+    .gift-hero-right img { width: 100%; height: 100%; object-fit: cover; }
+    .gift-hero-right::before { content: ''; position: absolute; inset: 0; background: linear-gradient(to right, #f5ede0 0%, transparent 20%); z-index: 1; }
+
+    /* Builder section */
+    .gift-builder { background: #f5ede0; padding: 100px 80px; }
+    @media (max-width: 768px) { .gift-builder { padding: 80px 24px; } }
+    .builder-header { text-align: center; margin-bottom: 72px; }
+    .builder-header h2 { font-size: clamp(32px,4vw,56px); font-weight: 300; color: #1a1208; margin-bottom: 10px; }
+    .builder-header h2 em { font-style: italic; color: #8b4a1a; }
+    .builder-header p { font-size: 14px; color: rgba(26,18,8,.5); letter-spacing: .05em; line-height: 1.8; }
+    .builder-layout { display: grid; grid-template-columns: 1fr 380px; gap: 48px; }
+    @media (max-width: 1024px) { .builder-layout { grid-template-columns: 1fr; } }
+    .builder-categories { display: flex; flex-direction: column; gap: 48px; }
+    .builder-cat-title { font-size: 9px; letter-spacing: .5em; text-transform: uppercase; color: #8b6a2a; margin-bottom: 24px; padding-bottom: 12px; border-bottom: 1px solid rgba(139,106,42,.2); }
+    .builder-items { display: grid; grid-template-columns: repeat(3,1fr); gap: 12px; }
+    @media (max-width: 768px) { .builder-items { grid-template-columns: repeat(2,1fr); } }
+    .builder-item { position: relative; border: 2px solid transparent; background: white; cursor: pointer; transition: border-color .3s, transform .2s; overflow: hidden; }
+    .builder-item.selected { border-color: #8b6a2a; }
+    .builder-item.selected::after { content: '✓'; position: absolute; top: 10px; right: 10px; width: 24px; height: 24px; background: #8b6a2a; color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 12px; }
+    .builder-item:hover:not(.selected) { transform: translateY(-3px); border-color: rgba(139,106,42,.3); }
+    .builder-item img { width: 100%; height: 130px; object-fit: cover; display: block; filter: brightness(.9); }
+    .builder-item-info { padding: 12px 14px; }
+    .builder-item-name { font-size: 14px; font-weight: 300; color: #1a1208; line-height: 1.2; }
+    .builder-item-jp { font-family: 'Shippori Mincho', serif; font-size: 11px; color: #8b6a2a; letter-spacing: .15em; margin-top: 2px; }
+    .builder-item-price { font-size: 12px; color: rgba(26,18,8,.5); margin-top: 6px; letter-spacing: .1em; }
+    /* Box summary */
+    .gift-box-summary { background: #1a1208; color: #faf0dc; padding: 40px; position: sticky; top: 120px; height: fit-content; }
+    .summary-title { font-size: 11px; letter-spacing: .5em; text-transform: uppercase; color: #c9a55a; margin-bottom: 28px; }
+    .summary-box-visual { width: 100%; aspect-ratio: 4/3; background: #2a1e0e; border: 1px solid rgba(201,165,90,.2); display: flex; align-items: center; justify-content: center; margin-bottom: 28px; position: relative; overflow: hidden; }
+    .box-preview-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 4px; width: 100%; padding: 8px; }
+    .box-preview-item { aspect-ratio: 1; overflow: hidden; background: #1a1208; }
+    .box-preview-item img { width: 100%; height: 100%; object-fit: cover; filter: brightness(.8); }
+    .box-preview-empty { aspect-ratio: 1; border: 1px dashed rgba(201,165,90,.2); display: flex; align-items: center; justify-content: center; font-size: 18px; color: rgba(201,165,90,.2); }
+    .summary-empty-msg { font-size: 13px; color: rgba(250,240,220,.3); text-align: center; padding: 20px; }
+    .summary-selected-list { margin-bottom: 24px; }
+    .summary-item { display: flex; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid rgba(201,165,90,.1); font-size: 13px; color: rgba(250,240,220,.7); }
+    .summary-item span:last-child { color: #c9a55a; }
+    .summary-total { display: flex; justify-content: space-between; padding: 16px 0; font-size: 16px; color: #faf0dc; border-top: 1px solid rgba(201,165,90,.3); margin-top: 8px; }
+    .summary-total span:last-child { color: #c9a55a; font-size: 20px; }
+    .summary-cta { width: 100%; padding: 18px; background: #c9a55a; color: #1a1208; font-size: 10px; letter-spacing: .5em; text-transform: uppercase; border: none; cursor: pointer; font-family: 'Cormorant Garamond', serif; transition: background .3s; margin-top: 20px; display: block; text-align: center; }
+    .summary-cta:hover { background: #d4b483; }
+    .summary-cta:disabled { background: rgba(201,165,90,.3); color: rgba(26,18,8,.4); cursor: not-allowed; }
+    /* Prebuilt gift sets */
+    .gift-sets { background: #0d0b08; padding: 120px 80px; }
+    @media (max-width: 768px) { .gift-sets { padding: 80px 24px; } }
+    .gift-sets-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 3px; margin-top: 56px; }
+    @media (max-width: 768px) { .gift-sets-grid { grid-template-columns: 1fr; } }
+    .gift-set-card { position: relative; overflow: hidden; cursor: pointer; }
+    @media (hover: hover) and (pointer: fine) { .gift-set-card { cursor: none; } }
+    .gift-set-card img { width: 100%; height: 520px; object-fit: cover; display: block; transition: transform .8s ease, filter .6s; filter: brightness(.7) saturate(1.1); }
+    .gift-set-card:hover img { transform: scale(1.05); filter: brightness(.55); }
+    .gift-set-overlay { position: absolute; inset: 0; background: linear-gradient(to top, rgba(13,11,8,.95) 0%, transparent 55%); display: flex; flex-direction: column; justify-content: flex-end; padding: 36px; }
+    .gift-set-label { font-size: 9px; letter-spacing: .45em; text-transform: uppercase; color: var(--gold); margin-bottom: 10px; }
+    .gift-set-name { font-size: 30px; font-weight: 300; color: var(--cream); line-height: 1.1; }
+    .gift-set-contents { font-size: 13px; color: rgba(240,228,200,.45); margin-top: 8px; line-height: 1.7; }
+    .gift-set-price { font-size: 16px; color: var(--gold-light); letter-spacing: .1em; margin-top: 14px; }
+
+    /* ════════════════════════════════════════
+       FRUIT COLOUR THEMES
+       Each fruit gets its own body class & themed variables
+       ════════════════════════════════════════ */
+
+    /* White Peach — creamy white / blush pink */
+    body.theme-white-peach {
+      --fp-bg: #fdf8f3;
+      --fp-text: #2d1f18;
+      --fp-accent: #c4856a;
+      --fp-accent-light: #e8b49a;
+      --fp-wash: rgba(253,248,243,0.97);
+      --fp-sub: rgba(45,31,24,0.5);
+    }
+    body.theme-white-peach #fruitPage { background: var(--fp-bg); }
+    body.theme-white-peach .fruit-hero-panel { }
+    body.theme-white-peach .fruit-hero-bg { filter: brightness(.55) saturate(.4) sepia(.2); }
+    body.theme-white-peach .fruit-hero-vignette { background: linear-gradient(to top, var(--fp-bg) 0%, transparent 55%); }
+    body.theme-white-peach .fruit-hero-name { color: var(--fp-text); }
+    body.theme-white-peach .fruit-hero-name em { color: var(--fp-accent); }
+    body.theme-white-peach .fruit-hero-jp { color: rgba(45,31,24,.4); }
+    body.theme-white-peach .fruit-hero-price { color: var(--fp-accent); }
+    body.theme-white-peach .fruit-hero-tag { color: var(--fp-accent); }
+    body.theme-white-peach .feature-chapter { background: var(--fp-bg); }
+    body.theme-white-peach .chapter-bg { filter: brightness(.15) saturate(.3); }
+    body.theme-white-peach .chapter-vignette { background: linear-gradient(to right, rgba(253,248,243,.9) 0%, transparent 65%); }
+    body.theme-white-peach .chapter-headline { color: var(--fp-text); }
+    body.theme-white-peach .chapter-headline em { color: var(--fp-accent); }
+    body.theme-white-peach .chapter-body { color: rgba(45,31,24,.6); }
+    body.theme-white-peach .chapter-tag { color: var(--fp-accent); }
+    body.theme-white-peach .view-all-cta { background: var(--fp-bg); border-top-color: rgba(196,133,106,.15); }
+    body.theme-white-peach .view-all-cta .cta-title { color: var(--fp-text); }
+    body.theme-white-peach .view-all-cta .cta-label { color: var(--fp-accent); }
+    body.theme-white-peach .view-all-cta .cta-btn { border-color: var(--fp-accent); color: var(--fp-accent); }
+    body.theme-white-peach .view-all-cta .cta-btn:hover { background: var(--fp-accent); color: var(--fp-bg); }
+    body.theme-white-peach footer { background: #f0e8dc; border-top-color: rgba(196,133,106,.2); }
+    body.theme-white-peach .footer-brand-name, body.theme-white-peach .footer-brand-sub, body.theme-white-peach .footer-col-title { color: var(--fp-accent); }
+    body.theme-white-peach .footer-links a { color: rgba(45,31,24,.4); }
+    body.theme-white-peach .footer-copy, body.theme-white-peach .footer-jp { color: rgba(45,31,24,.25); }
+    body.theme-white-peach #backBtn { color: rgba(45,31,24,.5); border-color: rgba(45,31,24,.2); }
+    body.theme-white-peach #backBtn:hover { color: var(--fp-accent); border-color: var(--fp-accent); }
+
+    /* Shine Muscat — deep forest green / jade */
+    body.theme-muscat { --fp-bg: #06140c; --fp-accent: #5a9a6a; --fp-accent-light: #7ab88a; }
+    body.theme-muscat #fruitPage { background: var(--fp-bg); }
+    body.theme-muscat .view-all-cta { background: var(--fp-bg); }
+    body.theme-muscat footer { background: #040e08; }
+    body.theme-muscat .view-all-cta .cta-title { color: var(--cream); }
+    body.theme-muscat .view-all-cta .cta-label, body.theme-muscat .view-all-cta .cta-btn, body.theme-muscat .footer-brand-name, body.theme-muscat .footer-brand-sub, body.theme-muscat .footer-col-title { color: var(--fp-accent); }
+    body.theme-muscat .view-all-cta .cta-btn { border-color: var(--fp-accent); }
+    body.theme-muscat .view-all-cta .cta-btn:hover { background: var(--fp-accent); color: var(--fp-bg); }
+    body.theme-muscat .fruit-hero-name em { color: var(--fp-accent); }
+    body.theme-muscat .fruit-hero-price, body.theme-muscat .fruit-hero-tag, body.theme-muscat .chapter-tag { color: var(--fp-accent); }
+    body.theme-muscat .chapter-headline em { color: var(--fp-accent); }
+
+    /* Yubari Melon — warm amber / terracotta */
+    body.theme-melon { --fp-bg: #120a02; --fp-accent: #c47a2a; --fp-accent-light: #e09a50; }
+    body.theme-melon #fruitPage { background: var(--fp-bg); }
+    body.theme-melon .view-all-cta { background: var(--fp-bg); }
+    body.theme-melon footer { background: #0c0601; }
+    body.theme-melon .view-all-cta .cta-title { color: var(--cream); }
+    body.theme-melon .view-all-cta .cta-label, body.theme-melon .view-all-cta .cta-btn, body.theme-melon .footer-brand-name, body.theme-melon .footer-brand-sub, body.theme-melon .footer-col-title { color: var(--fp-accent); }
+    body.theme-melon .view-all-cta .cta-btn { border-color: var(--fp-accent); }
+    body.theme-melon .view-all-cta .cta-btn:hover { background: var(--fp-accent); color: var(--fp-bg); }
+    body.theme-melon .fruit-hero-name em, body.theme-melon .fruit-hero-price, body.theme-melon .fruit-hero-tag, body.theme-melon .chapter-tag, body.theme-melon .chapter-headline em { color: var(--fp-accent); }
+
+    /* Strawberry — deep crimson */
+    body.theme-strawberry { --fp-bg: #0e0205; --fp-accent: #c43048; --fp-accent-light: #e05070; }
+    body.theme-strawberry #fruitPage { background: var(--fp-bg); }
+    body.theme-strawberry .view-all-cta { background: var(--fp-bg); }
+    body.theme-strawberry footer { background: #080103; }
+    body.theme-strawberry .view-all-cta .cta-title { color: var(--cream); }
+    body.theme-strawberry .view-all-cta .cta-label, body.theme-strawberry .view-all-cta .cta-btn, body.theme-strawberry .footer-brand-name, body.theme-strawberry .footer-brand-sub, body.theme-strawberry .footer-col-title { color: var(--fp-accent); }
+    body.theme-strawberry .view-all-cta .cta-btn { border-color: var(--fp-accent); }
+    body.theme-strawberry .view-all-cta .cta-btn:hover { background: var(--fp-accent); color: var(--fp-bg); }
+    body.theme-strawberry .fruit-hero-name em, body.theme-strawberry .fruit-hero-price, body.theme-strawberry .fruit-hero-tag, body.theme-strawberry .chapter-tag, body.theme-strawberry .chapter-headline em { color: var(--fp-accent); }
+
+    /* ════════════════════════════════════════
+       AI CHATBOT
+       ════════════════════════════════════════ */
+    #chatWidget {
+      position: fixed; bottom: 100px; right: 24px; z-index: 810;
+      display: flex; flex-direction: column; align-items: flex-end; gap: 12px;
+    }
+    #chatWindow {
+      width: 340px; max-width: calc(100vw - 48px); background: #1a1612; border: 1px solid rgba(184,152,106,.25);
+      display: none; flex-direction: column; overflow: hidden;
+      box-shadow: 0 20px 60px rgba(0,0,0,.7);
+    }
+    #chatWindow.open { display: flex; }
+    .chat-header {
+      background: #231e18; padding: 16px 20px; display: flex; align-items: center; gap: 12px; border-bottom: 1px solid rgba(184,152,106,.15);
+    }
+    .chat-header-dot { width: 8px; height: 8px; background: var(--gold); border-radius: 50%; animation: pulse 2s ease infinite; }
+    @keyframes pulse { 0%,100% { opacity: 1; transform: scale(1); } 50% { opacity: .6; transform: scale(.85); } }
+    .chat-header-title { font-size: 11px; letter-spacing: .3em; text-transform: uppercase; color: var(--gold-light); flex: 1; }
+    .chat-header-close { background: none; border: none; color: rgba(240,228,200,.4); cursor: pointer; font-size: 16px; transition: color .2s; }
+    .chat-header-close:hover { color: var(--gold); }
+    .chat-messages { height: 320px; overflow-y: auto; padding: 20px; display: flex; flex-direction: column; gap: 14px; }
+    .chat-messages::-webkit-scrollbar { width: 4px; }
+    .chat-messages::-webkit-scrollbar-thumb { background: rgba(184,152,106,.3); border-radius: 2px; }
+    .chat-msg { max-width: 85%; font-size: 14px; line-height: 1.6; padding: 12px 16px; }
+    .chat-msg.bot { background: #2a2218; color: rgba(240,228,200,.85); border-left: 2px solid var(--gold); align-self: flex-start; }
+    .chat-msg.user { background: var(--gold); color: var(--ink); align-self: flex-end; }
+    .chat-typing { display: flex; gap: 4px; padding: 12px 16px; background: #2a2218; border-left: 2px solid var(--gold); align-self: flex-start; width: 60px; }
+    .chat-typing span { width: 6px; height: 6px; background: var(--gold); border-radius: 50%; animation: typing 1.2s ease infinite; }
+    .chat-typing span:nth-child(2) { animation-delay: .2s; }
+    .chat-typing span:nth-child(3) { animation-delay: .4s; }
+    @keyframes typing { 0%,80%,100% { transform: translateY(0); opacity: .4; } 40% { transform: translateY(-6px); opacity: 1; } }
+    .chat-quick-replies { display: flex; flex-wrap: wrap; gap: 6px; padding: 0 20px 12px; }
+    .quick-reply { font-size: 11px; letter-spacing: .1em; padding: 6px 12px; border: 1px solid rgba(184,152,106,.3); color: var(--gold); background: transparent; cursor: pointer; transition: all .2s; font-family: 'Cormorant Garamond', serif; }
+    .quick-reply:hover { background: rgba(184,152,106,.15); border-color: var(--gold); }
+    .chat-input-row { display: flex; border-top: 1px solid rgba(184,152,106,.15); }
+    .chat-input { flex: 1; background: transparent; border: none; padding: 14px 16px; color: var(--cream); font-family: 'Cormorant Garamond', serif; font-size: 14px; outline: none; }
+    .chat-input::placeholder { color: rgba(240,228,200,.25); }
+    .chat-send { background: var(--gold); border: none; padding: 14px 18px; color: var(--ink); cursor: pointer; font-size: 14px; transition: background .2s; }
+    .chat-send:hover { background: var(--gold-light); }
+    #chatToggle {
+      width: 56px; height: 56px; border-radius: 50%; background: var(--gold); border: none; cursor: pointer;
+      display: flex; align-items: center; justify-content: center; box-shadow: 0 8px 30px rgba(0,0,0,.5);
+      transition: transform .3s, background .3s; color: var(--ink);
+    }
+    #chatToggle:hover { transform: scale(1.08); background: var(--gold-light); }
+    #chatToggle svg { width: 24px; height: 24px; fill: var(--ink); }
+    .chat-badge { position: absolute; top: -4px; right: -4px; width: 18px; height: 18px; background: #c43048; border-radius: 50%; border: 2px solid var(--ink); display: flex; align-items: center; justify-content: center; font-size: 9px; color: white; font-family: sans-serif; }
+
+    /* ════════════════════════════════════════
+       CONTACT BUBBLE
+       ════════════════════════════════════════ */
+    #contactWidget {
+      position: fixed; bottom: 24px; right: 24px; z-index: 800;
+      display: flex; flex-direction: column; align-items: flex-end; gap: 10px;
+    }
+    .contact-bubbles {
+      display: flex; flex-direction: column; gap: 10px; align-items: flex-end;
+      pointer-events: none; opacity: 0; transform: translateY(20px);
+      transition: opacity .35s, transform .35s;
+    }
+    .contact-bubbles.open { pointer-events: all; opacity: 1; transform: translateY(0); }
+    .contact-bubble {
+      display: flex; align-items: center; gap: 12px; cursor: pointer;
+      text-decoration: none;
+    }
+    .contact-bubble-label {
+      font-size: 10px; letter-spacing: .25em; text-transform: uppercase;
+      color: rgba(240,228,200,.7); background: rgba(13,11,8,.85);
+      backdrop-filter: blur(8px); border: 1px solid rgba(184,152,106,.2);
+      padding: 7px 14px; white-space: nowrap;
+      transition: color .2s, border-color .2s;
+    }
+    .contact-bubble:hover .contact-bubble-label { color: var(--gold-light); border-color: var(--gold); }
+    .contact-bubble-icon {
+      width: 44px; height: 44px; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      box-shadow: 0 4px 16px rgba(0,0,0,.4); flex-shrink: 0;
+      transition: transform .2s;
+    }
+    .contact-bubble:hover .contact-bubble-icon { transform: scale(1.1); }
+    .contact-bubble-icon img { width: 44px; height: 44px; border-radius: 50%; object-fit: cover; }
+    .contact-bubble-icon svg { width: 24px; height: 24px; }
+    /* Platform colours */
+    .bubble-whatsapp .contact-bubble-icon { background: #25D366; }
+    .bubble-telegram .contact-bubble-icon { background: #229ED9; }
+    .bubble-facebook .contact-bubble-icon { background: #1877F2; }
+    .bubble-email .contact-bubble-icon { background: var(--gold); }
+    .bubble-line .contact-bubble-icon { background: #00C300; }
+
+    #contactToggle {
+      width: 56px; height: 56px; border-radius: 50%; background: #1a1612;
+      border: 1px solid rgba(184,152,106,.4); cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      box-shadow: 0 8px 30px rgba(0,0,0,.5); transition: all .3s; position: relative;
+    }
+    #contactToggle:hover { background: #231e18; border-color: var(--gold); }
+    #contactToggle svg { width: 22px; height: 22px; fill: var(--gold); transition: transform .4s; }
+    #contactToggle.open svg { transform: rotate(45deg); }
+  </style>
+</head>
+<body>
+
+<div class="cursor" id="cursor"></div>
+<div class="cursor-ring" id="cursorRing"></div>
+
+<button id="backBtn" onclick="exitFruitMode()">← All Fruits</button>
+
+<!-- AI CHATBOT -->
+<div id="chatWidget">
+  <div id="chatWindow">
+    <div class="chat-header">
+      <div class="chat-header-dot"></div>
+      <span class="chat-header-title">Jewelry Farm Guide</span>
+      <button class="chat-header-close" onclick="toggleChat()">✕</button>
+    </div>
+    <div class="chat-messages" id="chatMessages"></div>
+    <div class="chat-quick-replies" id="quickReplies">
+      <button class="quick-reply" onclick="sendQuick('What makes your fruits so special?')">What's special?</button>
+      <button class="quick-reply" onclick="sendQuick('Which fruit is in season now?')">In season?</button>
+      <button class="quick-reply" onclick="sendQuick('Tell me about gift options')">Gift options</button>
+      <button class="quick-reply" onclick="sendQuick('Do you ship internationally?')">Shipping?</button>
+    </div>
+    <div class="chat-input-row">
+      <input class="chat-input" id="chatInput" placeholder="Ask about our fruits…" onkeydown="if(event.key==='Enter')sendChat()" />
+      <button class="chat-send" onclick="sendChat()">↑</button>
+    </div>
+  </div>
+  <button id="chatToggle" onclick="toggleChat()" style="position:relative">
+    <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.02 2 11c0 2.74 1.23 5.2 3.17 6.89L4 22l4.44-1.48A10.13 10.13 0 0012 21c5.52 0 10-4.02 10-9S17.52 2 12 2z"/></svg>
+    <div class="chat-badge" id="chatBadge">1</div>
+  </button>
+</div>
+
+<!-- CONTACT BUBBLES -->
+<div id="contactWidget">
+  <div class="contact-bubbles" id="contactBubbles">
+    <a class="contact-bubble bubble-whatsapp" href="https://wa.me/81XXXXXXXXX" target="_blank">
+      <span class="contact-bubble-label">WhatsApp</span>
+      <div class="contact-bubble-icon">
+        <svg viewBox="0 0 24 24" fill="white"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.123.554 4.117 1.524 5.843L0 24l6.338-1.498A11.955 11.955 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 22c-1.881 0-3.64-.497-5.16-1.364l-.369-.219-3.767.89.952-3.668-.24-.378A9.952 9.952 0 012 12C2 6.477 6.477 2 12 2s10 4.477 10 10-4.477 10-10 10z"/></svg>
+      </div>
+    </a>
+    <a class="contact-bubble bubble-telegram" href="https://t.me/jewelryfarm" target="_blank">
+      <span class="contact-bubble-label">Telegram</span>
+      <div class="contact-bubble-icon">
+        <svg viewBox="0 0 24 24" fill="white"><path d="M11.944 0A12 12 0 000 12a12 12 0 0012 12 12 12 0 0012-12A12 12 0 0012 0a12 12 0 00-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 01.171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/></svg>
+      </div>
+    </a>
+    <a class="contact-bubble bubble-facebook" href="https://facebook.com/jewelryfarm" target="_blank">
+      <span class="contact-bubble-label">Facebook</span>
+      <div class="contact-bubble-icon">
+        <svg viewBox="0 0 24 24" fill="white"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
+      </div>
+    </a>
+    <a class="contact-bubble bubble-line" href="https://line.me/ti/p/jewelryfarm" target="_blank">
+      <span class="contact-bubble-label">LINE</span>
+      <div class="contact-bubble-icon">
+        <svg viewBox="0 0 24 24" fill="white"><path d="M19.365 9.863c.349 0 .63.285.63.631 0 .345-.281.63-.63.63H17.61v1.125h1.755c.349 0 .63.283.63.63 0 .344-.281.629-.63.629h-2.386c-.345 0-.627-.285-.627-.629V8.108c0-.345.282-.63.627-.63h2.386c.349 0 .63.285.63.63 0 .349-.281.63-.63.63H17.61v1.125h1.755zm-3.855 3.016c0 .27-.174.51-.432.596-.064.021-.133.031-.199.031-.211 0-.391-.09-.51-.25l-2.443-3.317v2.94c0 .344-.279.629-.631.629-.346 0-.626-.285-.626-.629V8.108c0-.27.173-.51.43-.595.06-.023.136-.033.194-.033.195 0 .375.104.495.254l2.462 3.33V8.108c0-.345.282-.63.63-.63.345 0 .63.285.63.63v4.771zm-5.741 0c0 .344-.282.629-.631.629-.345 0-.627-.285-.627-.629V8.108c0-.345.282-.63.627-.63.349 0 .631.285.631.63v4.771zm-2.466.629H4.917c-.345 0-.63-.285-.63-.629V8.108c0-.345.285-.63.63-.63.348 0 .63.285.63.63v4.141h1.756c.348 0 .629.283.629.63 0 .344-.281.629-.629.629M24 10.314C24 4.943 18.615.572 12 .572S0 4.943 0 10.314c0 4.811 4.27 8.842 10.035 9.608.391.082.923.258 1.058.59.12.301.079.766.038 1.08l-.164 1.02c-.045.301-.24 1.186 1.049.645 1.291-.539 6.916-4.078 9.436-6.975C23.176 14.393 24 12.458 24 10.314"/></svg>
+      </div>
+    </a>
+    <a class="contact-bubble bubble-email" href="mailto:hello@jewelry-farm.jp">
+      <span class="contact-bubble-label">Email Us</span>
+      <div class="contact-bubble-icon">
+        <svg viewBox="0 0 24 24" fill="#1a1208"><path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg>
+      </div>
+    </a>
+  </div>
+  <button id="contactToggle" onclick="toggleContact()">
+    <svg viewBox="0 0 24 24"><path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm0 14H6l-2 2V4h16v12z"/></svg>
+  </button>
+</div>
+
+<nav id="mainNav">
+  <div class="nav-logo" onclick="goHome()">Jewelry Farm<span>ジュエリーファーム</span></div>
+  <ul class="nav-links">
+    <li><a onclick="goHome()">Catalogue</a></li>
+    <li><a onclick="setMode('dehydrated')">Dehydrated</a></li>
+    <li><a onclick="setMode('gift')">Gift Sets</a></li>
+    <li><a>Philosophy</a></li>
+    <li><a>Seasons</a></li>
+  </ul>
+  <div class="nav-modes">
+    <button class="mode-tab active" id="tab-fresh" onclick="setMode('fresh')">Fresh</button>
+    <button class="mode-tab" id="tab-dehydrated" onclick="setMode('dehydrated')">Dehydrated</button>
+    <button class="mode-tab" id="tab-gift" onclick="setMode('gift')">Gift Sets</button>
+  </div>
+  <button id="mobileMenuBtn" onclick="document.getElementById('mobileMenu').classList.toggle('open')" aria-label="Open menu">☰</button>
+</nav>
+
+<!-- MOBILE MENU -->
+<div id="mobileMenu">
+  <button class="mob-close" onclick="document.getElementById('mobileMenu').classList.remove('open')">✕</button>
+  <a onclick="goHome();document.getElementById('mobileMenu').classList.remove('open')">Catalogue</a>
+  <div class="mob-divider"></div>
+  <button class="mob-mode-tab" onclick="setMode('fresh');document.getElementById('mobileMenu').classList.remove('open')">Fresh Fruits</button>
+  <button class="mob-mode-tab" onclick="setMode('dehydrated');document.getElementById('mobileMenu').classList.remove('open')">Dehydrated</button>
+  <button class="mob-mode-tab" onclick="setMode('gift');document.getElementById('mobileMenu').classList.remove('open')">Gift Sets</button>
+  <div class="mob-divider"></div>
+  <a onclick="document.getElementById('mobileMenu').classList.remove('open')">Philosophy</a>
+  <a onclick="document.getElementById('mobileMenu').classList.remove('open')">Seasons</a>
+
+<!-- ════════ HERO ════════ -->
+<section id="hero">
+  <div id="heroAtmos"></div>
+  <div id="heroModeBadge">Fresh Collection · 生の果物</div>
+
+  <div id="heroTrack">
+    <div class="hero-slide active" data-index="0">
+      <div class="slide-atmos" style="background-image:url('https://images.unsplash.com/photo-1537640538966-79f369143f8f?w=1800&q=90&auto=format&fit=crop')"></div>
+      <div class="slide-fruit"><img src="https://images.unsplash.com/photo-1537640538966-79f369143f8f?w=700&q=90&auto=format&fit=crop" alt="Shine Muscat" /></div>
+      <div class="slide-reflection"></div>
+    </div>
+    <div class="hero-slide" data-index="1">
+      <div class="slide-atmos" style="background-image:url('https://images.unsplash.com/photo-1571575173700-afb9492e6a50?w=1800&q=90&auto=format&fit=crop')"></div>
+      <div class="slide-fruit"><img src="https://images.unsplash.com/photo-1571575173700-afb9492e6a50?w=700&q=90&auto=format&fit=crop" alt="Yubari Melon" /></div>
+      <div class="slide-reflection"></div>
+    </div>
+    <div class="hero-slide" data-index="2">
+      <div class="slide-atmos" style="background-image:url('https://images.unsplash.com/photo-1464965911861-746a04b4bca6?w=1800&q=90&auto=format&fit=crop')"></div>
+      <div class="slide-fruit"><img src="https://images.unsplash.com/photo-1464965911861-746a04b4bca6?w=700&q=90&auto=format&fit=crop" alt="Tochiotome" /></div>
+      <div class="slide-reflection"></div>
+    </div>
+    <div class="hero-slide" data-index="3">
+      <div class="slide-atmos" style="background-image:url('https://images.unsplash.com/photo-1510007532-98e7a935a13b?w=1800&q=90&auto=format&fit=crop')"></div>
+      <div class="slide-fruit"><img src="https://images.unsplash.com/photo-1510007532-98e7a935a13b?w=700&q=90&auto=format&fit=crop" alt="White Peach" /></div>
+      <div class="slide-reflection"></div>
+    </div>
+  </div>
+
+  <div class="hero-vignette"></div>
+
+  <div class="hero-ui">
+    <div>
+      <div class="hero-label-box">
+        <span class="hero-label-text" id="heroLabelText">Shine Muscat</span>
+      </div>
+      <div class="hero-sub" id="heroSub">SELECT A FRUIT TO EXPLORE</div>
+    </div>
+    <div class="hero-nav-center">
+      <div class="hero-arrows">
+        <button class="arrow-btn" id="arrowPrev">‹</button>
+        <button class="arrow-btn center-btn"><span style="font-size:20px">☚</span></button>
+        <button class="arrow-btn" id="arrowNext">›</button>
+      </div>
+      <div class="drag-hint">DRAG TO SELECT · ARROWS TO BROWSE<br>TAP ☚ TO ENTER THIS FRUIT'S STORY</div>
+    </div>
+    <div class="hero-meta" id="heroMeta">
+      <div class="meta-price" id="metaPrice">From ¥12,800 / bunch</div>
+      <div class="meta-origin" id="metaOrigin">Okayama Prefecture · 岡山</div>
+      <div class="meta-scroll-hint">SCROLL TO EXPLORE</div>
+      <span class="scroll-arrow">↓</span>
+    </div>
+  </div>
+</section>
+
+<!-- ════════ MAIN CONTENT ════════ -->
+<div id="mainContent">
+
+  <!-- DEFAULT PAGE -->
+  <div id="defaultPage">
+    <section class="featured">
+      <div class="section-header reveal">
+        <div><p class="section-sub">Signature Collection</p><h2 class="section-title">The <em>Season's</em><br>Jewels</h2></div>
+        <a href="#" class="section-link">View all fruits →</a>
+      </div>
+      <div class="fruit-grid">
+        <div class="fruit-card large">
+          <img src="https://images.unsplash.com/photo-1537640538966-79f369143f8f?w=900&q=90&auto=format&fit=crop" alt="Shine Muscat" loading="lazy" />
+          <div class="fruit-overlay"><span class="fruit-tag">Limited Reserve · 限定品</span><div class="fruit-name">Shine Muscat<span class="jp-name">シャインマスカット</span></div><div class="fruit-price">From ¥12,800 / bunch</div></div>
+        </div>
+        <div class="fruit-card">
+          <img src="https://images.unsplash.com/photo-1571575173700-afb9492e6a50?w=700&q=90&auto=format&fit=crop" alt="Yubari Melon" loading="lazy" />
+          <div class="fruit-overlay"><span class="fruit-tag">Hokkaido · 北海道</span><div class="fruit-name">Yubari King<span class="jp-name">夕張メロン</span></div><div class="fruit-price">From ¥30,000 / piece</div></div>
+        </div>
+        <div class="fruit-card">
+          <img src="https://images.unsplash.com/photo-1464965911861-746a04b4bca6?w=700&q=90&auto=format&fit=crop" alt="Strawberry" loading="lazy" />
+          <div class="fruit-overlay"><span class="fruit-tag">Tochigi · 栃木</span><div class="fruit-name">Tochiotome<span class="jp-name">とちおとめ</span></div><div class="fruit-price">From ¥4,500 / pack</div></div>
+        </div>
+        <div class="fruit-card">
+          <img src="https://images.unsplash.com/photo-1510007532-98e7a935a13b?w=700&q=90&auto=format&fit=crop" alt="Peach" loading="lazy" />
+          <div class="fruit-overlay"><span class="fruit-tag">Okayama · 岡山</span><div class="fruit-name">White Peach<span class="jp-name">白桃</span></div><div class="fruit-price">From ¥8,000 / piece</div></div>
+        </div>
+        <div class="fruit-card">
+          <img src="https://images.unsplash.com/photo-1528823872057-9c018a7a7553?w=700&q=90&auto=format&fit=crop" alt="Cherry" loading="lazy" />
+          <div class="fruit-overlay"><span class="fruit-tag">Yamagata · 山形</span><div class="fruit-name">Sato Nishiki<span class="jp-name">佐藤錦</span></div><div class="fruit-price">From ¥6,500 / box</div></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="philosophy">
+      <div class="phil-media reveal">
+        <div class="phil-accent"></div>
+        <img class="phil-img" src="https://images.unsplash.com/photo-1611735341450-74d61e660343?w=800&q=90&auto=format&fit=crop" alt="Farm Philosophy" />
+        <div class="phil-number">01</div>
+      </div>
+      <div class="phil-text reveal">
+        <p class="phil-eyebrow">Our Philosophy · 私たちの哲学</p>
+        <h2 class="phil-title">Grown with the<br><em>Soul of Japan</em></h2>
+        <p class="phil-body">At Jewelry Farm, every fruit is raised with the precision of a jeweler and the patience of generations. We tend our orchards through Japan's four seasons — each one leaving its mark on flavour, colour, and aroma.</p>
+        <p class="phil-body">Only the top 1% of each harvest earns the Jewelry Farm seal. Our graders inspect every piece by hand, measuring brix levels, skin luminosity, and structural perfection.</p>
+        <p class="phil-body-jp">私たちの農園では、一粒一粒に魂を込めて育てています。<br>日本の四季が育む恵みを、最高の形でお届けします。</p>
+        <div class="phil-stats">
+          <div><div class="stat-num">50+</div><div class="stat-label">Years of Craft</div></div>
+          <div><div class="stat-num">1%</div><div class="stat-label">Top Harvest Only</div></div>
+          <div><div class="stat-num">12</div><div class="stat-label">Varieties</div></div>
+        </div>
+      </div>
+    </section>
+
+    <div class="banner">
+      <div class="banner-bg"></div>
+      <div class="banner-content">
+        <p class="banner-quote">"A fruit that moves you is not eaten — it is experienced."</p>
+        <p class="banner-attribution">— Jewelry Farm Master Cultivator</p>
+      </div>
+    </div>
+
+    <section class="season">
+      <div class="section-header reveal">
+        <div><p class="section-sub">Now in Season · 旬の果物</p><h2 class="section-title">Summer's<br><em>Offerings</em></h2></div>
+        <a href="#" class="section-link">Full season guide →</a>
+      </div>
+      <div class="season-strip">
+        <div class="season-item reveal"><img src="https://images.unsplash.com/photo-1523049673857-eb18f1d7b578?w=600&q=90&auto=format&fit=crop" alt="Ruby Grapes" loading="lazy" /><div class="season-badge">Peak Season</div><div class="season-overlay"><div class="season-fruit">Ruby Roman Grape</div><div class="season-origin">Ishikawa Prefecture</div><div class="season-price">From ¥100,000 / bunch</div></div></div>
+        <div class="season-item reveal"><img src="https://images.unsplash.com/photo-1567306226416-28f0efdc88ce?w=600&q=90&auto=format&fit=crop" alt="Pear" loading="lazy" /><div class="season-badge">Pre-order</div><div class="season-overlay"><div class="season-fruit">Singo Pear</div><div class="season-origin">Niigata Prefecture</div><div class="season-price">From ¥5,500 / piece</div></div></div>
+        <div class="season-item reveal"><img src="https://images.unsplash.com/photo-1490474418585-ba9bad8fd0ea?w=600&q=90&auto=format&fit=crop" alt="Citrus" loading="lazy" /><div class="season-overlay"><div class="season-fruit">Dekopon</div><div class="season-origin">Kumamoto Prefecture</div><div class="season-price">From ¥3,800 / piece</div></div></div>
+        <div class="season-item reveal"><img src="https://images.unsplash.com/photo-1553279768-865429fa0078?w=600&q=90&auto=format&fit=crop" alt="Mango" loading="lazy" /><div class="season-badge">Rare</div><div class="season-overlay"><div class="season-fruit">Egg of Sun Mango</div><div class="season-origin">Miyazaki Prefecture</div><div class="season-price">From ¥21,000 / piece</div></div></div>
+      </div>
+    </section>
+
+    <section class="process">
+      <div class="section-header reveal">
+        <div><p class="section-sub" style="color:var(--gold)">From Soil to Gift · 土から贈り物へ</p><h2 class="section-title" style="color:var(--text)">The Art of<br><em style="color:var(--red)">Perfection</em></h2></div>
+      </div>
+      <div class="process-grid">
+        <div class="process-step reveal"><div class="step-num">01</div><h3 class="step-title">Hand-<em>Selected</em><br>Origins</h3><p class="step-body">Every variety we carry is chosen from specific micro-climates across Japan's prefectures.</p><p class="step-jp">産地の厳選 — 日本各地のテロワール</p></div>
+        <div class="process-step reveal"><div class="step-num">02</div><h3 class="step-title">The <em>Grading</em><br>Ritual</h3><p class="step-body">Each fruit undergoes rigorous multi-stage inspection — brix readings, luminosity grading, and weight-to-size ratios.</p><p class="step-jp">品質検査 — 職人の目による厳格な選別</p></div>
+        <div class="process-step reveal"><div class="step-num">03</div><h3 class="step-title"><em>Gift-Ready</em><br>Delivery</h3><p class="step-body">Nestled in artisan wood boxes with silk cushioning — a complete sensory experience from unwrapping to final taste.</p><p class="step-jp">ギフトの演出 — 開けた瞬間の感動</p></div>
+      </div>
+    </section>
+
+    <section class="showcase">
+      <div class="showcase-panel"><img src="https://images.unsplash.com/photo-1587393855524-087f83d95bc9?w=800&q=90&auto=format&fit=crop" alt="Strawberries" loading="lazy" /><div class="showcase-info"><div class="showcase-fruit">Amaou Strawberry</div><div class="showcase-origin">Fukuoka Prefecture · 福岡</div><div class="showcase-price">From ¥7,200 / pack</div></div></div>
+      <div class="showcase-panel"><img src="https://images.unsplash.com/photo-1510007532-98e7a935a13b?w=800&q=90&auto=format&fit=crop" alt="Peach" loading="lazy" /><div class="showcase-info"><div class="showcase-fruit">Kawanakajima Peach</div><div class="showcase-origin">Nagano Prefecture · 長野</div><div class="showcase-price">From ¥9,800 / pair</div></div></div>
+      <div class="showcase-panel"><img src="https://images.unsplash.com/photo-1553279768-865429fa0078?w=800&q=90&auto=format&fit=crop" alt="Mango" loading="lazy" /><div class="showcase-info"><div class="showcase-fruit">Sun Egg Mango</div><div class="showcase-origin">Miyazaki Prefecture · 宮崎</div><div class="showcase-price">From ¥21,000 / piece</div></div></div>
+    </section>
+
+    <footer>
+      <div class="footer-top">
+        <div><div class="footer-brand-name">Jewelry Farm</div><div class="footer-brand-sub">ジュエリーファーム · Premium Fruit Atelier</div><p class="footer-desc">Japan's foremost cultivator of premium fruits since 1974.</p></div>
+        <div><p class="footer-col-title">Catalogue</p><ul class="footer-links"><li><a href="#">Grapes & Muscat</a></li><li><a href="#">Musk Melons</a></li><li><a href="#">Stone Fruits</a></li><li><a href="#">Strawberries</a></li><li><a href="#">Citrus</a></li></ul></div>
+        <div><p class="footer-col-title">Gift Services</p><ul class="footer-links"><li><a href="#">Corporate Gifting</a></li><li><a href="#">Seasonal Boxes</a></li><li><a href="#">Bespoke Orders</a></li><li><a href="#">International Delivery</a></li></ul></div>
+        <div><p class="footer-col-title">Company</p><ul class="footer-links"><li><a href="#">Our Philosophy</a></li><li><a href="#">Farm Visits</a></li><li><a href="#">Grower Stories</a></li><li><a href="#">Contact Us</a></li></ul></div>
+      </div>
+      <div class="footer-bottom">
+        <p class="footer-copy">© 2026 Jewelry Farm · All Rights Reserved</p>
+        <p class="footer-jp">自然の宝石 — 人生を豊かにする果物</p>
+      </div>
+    </footer>
+  </div>
+
+  <!-- FRUIT PAGE -->
+  <div id="fruitPage"></div>
+
+  <!-- DEHYDRATED PAGE -->
+  <div id="dehydratedPage">
+    <div class="dehyd-hero">
+      <div class="dehyd-hero-bg"></div>
+      <div class="dehyd-hero-wash"></div>
+      <div class="dehyd-hero-content">
+        <span class="dehyd-eyebrow">Preserved Collection · 乾燥果物</span>
+        <h1 class="dehyd-title">Japan's Jewels,<br><em>Preserved</em></h1>
+        <span class="dehyd-jp">乾燥させた宝石 — 旬の香りをいつまでも</span>
+        <p class="dehyd-desc">Our dehydrated collection captures the peak-season flavour of Japan's most celebrated fruits — slowly air-dried at low temperature to preserve colour, taste, and nutritional integrity. A jewel that endures.</p>
+      </div>
+    </div>
+    <div class="dehyd-products">
+      <div class="section-header reveal" style="color:#faf0dc">
+        <div><p class="section-sub" style="color:#c9a55a">Dehydrated Range</p><h2 class="section-title" style="color:#faf0dc">The <em style="color:#c9a55a">Preserved</em><br>Collection</h2></div>
+        <a href="#" class="section-link" style="color:rgba(201,165,90,.6); border-color:rgba(201,165,90,.2)">Full catalogue →</a>
+      </div>
+      <div class="dehyd-grid">
+        <div class="dehyd-card">
+          <img src="https://images.unsplash.com/photo-1537640538966-79f369143f8f?w=700&q=90" alt="Dehydrated Shine Muscat" loading="lazy" />
+          <div class="dehyd-card-overlay"><span class="dehyd-label">Air-Dried · 低温乾燥</span><div class="dehyd-name">Shine Muscat<span class="dehyd-name-jp">シャインマスカット</span></div><div class="dehyd-price">¥4,800 / 50g bag</div></div>
+        </div>
+        <div class="dehyd-card">
+          <img src="https://images.unsplash.com/photo-1510007532-98e7a935a13b?w=700&q=90" alt="Dehydrated White Peach" loading="lazy" />
+          <div class="dehyd-card-overlay"><span class="dehyd-label">Slow-Dried · 白桃</span><div class="dehyd-name">White Peach Slices<span class="dehyd-name-jp">白桃ドライフルーツ</span></div><div class="dehyd-price">¥3,600 / 40g bag</div></div>
+        </div>
+        <div class="dehyd-card">
+          <img src="https://images.unsplash.com/photo-1571575173700-afb9492e6a50?w=700&q=90" alt="Dehydrated Melon" loading="lazy" />
+          <div class="dehyd-card-overlay"><span class="dehyd-label">Concentrated · 夕張</span><div class="dehyd-name">Yubari Melon Bites<span class="dehyd-name-jp">夕張メロンドライ</span></div><div class="dehyd-price">¥6,200 / 35g bag</div></div>
+        </div>
+        <div class="dehyd-card">
+          <img src="https://images.unsplash.com/photo-1464965911861-746a04b4bca6?w=700&q=90" alt="Dehydrated Strawberry" loading="lazy" />
+          <div class="dehyd-card-overlay"><span class="dehyd-label">Freeze-Dried · 苺</span><div class="dehyd-name">Tochiotome Crisps<span class="dehyd-name-jp">苺フリーズドライ</span></div><div class="dehyd-price">¥2,800 / 30g bag</div></div>
+        </div>
+        <div class="dehyd-card">
+          <img src="https://images.unsplash.com/photo-1523049673857-eb18f1d7b578?w=700&q=90" alt="Dehydrated Grapes" loading="lazy" />
+          <div class="dehyd-card-overlay"><span class="dehyd-label">Sun-Dried · 葡萄</span><div class="dehyd-name">Ruby Roman Raisins<span class="dehyd-name-jp">ルビーロマンレーズン</span></div><div class="dehyd-price">¥8,400 / 40g bag</div></div>
+        </div>
+        <div class="dehyd-card">
+          <img src="https://images.unsplash.com/photo-1528823872057-9c018a7a7553?w=700&q=90" alt="Dehydrated Cherry" loading="lazy" />
+          <div class="dehyd-card-overlay"><span class="dehyd-label">Preserved · 佐藤錦</span><div class="dehyd-name">Sato Nishiki Cherries<span class="dehyd-name-jp">佐藤錦ドライチェリー</span></div><div class="dehyd-price">¥5,200 / 35g bag</div></div>
+        </div>
+      </div>
+    </div>
+    <div class="dehyd-process">
+      <div class="dehyd-process-img reveal">
+        <img src="https://images.unsplash.com/photo-1610832958506-aa56368176cf?w=800&q=90" alt="Dehydration Process" loading="lazy" />
+      </div>
+      <div class="dehyd-process-content reveal">
+        <p class="section-sub" style="color:#c9a55a; margin-bottom:16px">Our Method · 製法</p>
+        <h2 class="section-title" style="color:#faf0dc; margin-bottom:32px">The Science of<br><em style="color:#c9a55a">Preservation</em></h2>
+        <p>Each fruit is harvested at the exact moment of peak Brix — then immediately transferred to our temperature-controlled drying facility. No preservatives. No added sugars. No shortcuts.</p>
+        <p>Our proprietary low-temperature air-drying method removes moisture over 48 to 72 hours, concentrating natural flavours while retaining the fruit's essential colour, aroma, and nutritional profile.</p>
+        <p style="font-family:'Shippori Mincho',serif; font-size:13px; letter-spacing:.1em; color:rgba(201,165,90,.5); margin-top:24px;">添加物不使用 — 旬の恵みをそのまま閉じ込めた製法</p>
+      </div>
+    </div>
+    <footer>
+      <div class="footer-top">
+        <div><div class="footer-brand-name" style="color:#c9a55a">Jewelry Farm</div><div class="footer-brand-sub" style="color:#c9a55a">ジュエリーファーム · Preserved Collection</div><p class="footer-desc">Japan's foremost cultivator of premium fruits since 1974.</p></div>
+        <div><p class="footer-col-title" style="color:#c9a55a">Dehydrated</p><ul class="footer-links"><li><a href="#">Shine Muscat</a></li><li><a href="#">White Peach</a></li><li><a href="#">Ruby Roman</a></li><li><a href="#">Yubari Melon</a></li></ul></div>
+        <div><p class="footer-col-title" style="color:#c9a55a">Gift Sets</p><ul class="footer-links"><li><a href="#">Dehydrated Gift Box</a></li><li><a href="#">Mixed Selection</a></li><li><a href="#">Corporate Orders</a></li></ul></div>
+        <div><p class="footer-col-title" style="color:#c9a55a">Company</p><ul class="footer-links"><li><a href="#">Our Method</a></li><li><a href="#">Fresh Range</a></li><li><a href="#">Contact</a></li></ul></div>
+      </div>
+      <div class="footer-bottom">
+        <p class="footer-copy">© 2026 Jewelry Farm · All Rights Reserved</p>
+        <p class="footer-jp">自然の宝石 — 人生を豊かにする果物</p>
+      </div>
+    </footer>
+  </div>
+
+  <!-- GIFT PAGE -->
+  <div id="giftPage">
+    <div class="gift-hero">
+      <div class="gift-hero-left">
+        <p class="gift-hero-eyebrow">Gifting Collection · 贈り物</p>
+        <h1 class="gift-hero-title">Give the<br><em>Extraordinary</em></h1>
+        <p class="gift-hero-jp">心に残る贈り物</p>
+        <p class="gift-hero-desc">Curate your own assortment of fresh and dehydrated premium Japanese fruits — or choose from our signature gift sets, inspired by the legendary Sembikiya tradition. Every box is presented in a lacquered paulownia case.</p>
+      </div>
+      <div class="gift-hero-right">
+        <img src="https://images.unsplash.com/photo-1610832958506-aa56368176cf?w=1200&q=90" alt="Jewelry Farm Gift Box" />
+      </div>
+    </div>
+
+    <!-- Custom Builder -->
+    <div class="gift-builder">
+      <div class="builder-header">
+        <p style="font-size:9px;letter-spacing:.5em;text-transform:uppercase;color:#8b6a2a;margin-bottom:16px">Build Your Box · あなただけの贈り物</p>
+        <h2>Design Your Own<br><em>Fruit Jewel Box</em></h2>
+        <p style="margin-top:16px">Select up to 6 items — a mix of fresh and dehydrated — to fill your bespoke gift box.</p>
+      </div>
+      <div class="builder-layout">
+        <div class="builder-categories">
+          <!-- Fresh fruits -->
+          <div>
+            <p class="builder-cat-title">Fresh Fruits · 生の果物</p>
+            <div class="builder-items">
+              <div class="builder-item" data-name="Shine Muscat" data-jp="シャインマスカット" data-price="¥12,800" data-img="https://images.unsplash.com/photo-1537640538966-79f369143f8f?w=300&q=80" onclick="toggleBuilderItem(this)">
+                <img src="https://images.unsplash.com/photo-1537640538966-79f369143f8f?w=300&q=80" alt="Shine Muscat" />
+                <div class="builder-item-info"><div class="builder-item-name">Shine Muscat</div><div class="builder-item-jp">シャインマスカット</div><div class="builder-item-price">¥12,800 / bunch</div></div>
+              </div>
+              <div class="builder-item" data-name="Yubari Melon" data-jp="夕張メロン" data-price="¥30,000" data-img="https://images.unsplash.com/photo-1571575173700-afb9492e6a50?w=300&q=80" onclick="toggleBuilderItem(this)">
+                <img src="https://images.unsplash.com/photo-1571575173700-afb9492e6a50?w=300&q=80" alt="Yubari Melon" />
+                <div class="builder-item-info"><div class="builder-item-name">Yubari Melon</div><div class="builder-item-jp">夕張メロン</div><div class="builder-item-price">¥30,000 / piece</div></div>
+              </div>
+              <div class="builder-item" data-name="White Peach" data-jp="白桃" data-price="¥8,000" data-img="https://images.unsplash.com/photo-1510007532-98e7a935a13b?w=300&q=80" onclick="toggleBuilderItem(this)">
+                <img src="https://images.unsplash.com/photo-1510007532-98e7a935a13b?w=300&q=80" alt="White Peach" />
+                <div class="builder-item-info"><div class="builder-item-name">White Peach</div><div class="builder-item-jp">白桃</div><div class="builder-item-price">¥8,000 / piece</div></div>
+              </div>
+              <div class="builder-item" data-name="Tochiotome" data-jp="とちおとめ" data-price="¥4,500" data-img="https://images.unsplash.com/photo-1464965911861-746a04b4bca6?w=300&q=80" onclick="toggleBuilderItem(this)">
+                <img src="https://images.unsplash.com/photo-1464965911861-746a04b4bca6?w=300&q=80" alt="Strawberry" />
+                <div class="builder-item-info"><div class="builder-item-name">Tochiotome</div><div class="builder-item-jp">とちおとめ</div><div class="builder-item-price">¥4,500 / pack</div></div>
+              </div>
+              <div class="builder-item" data-name="Sato Nishiki" data-jp="佐藤錦" data-price="¥6,500" data-img="https://images.unsplash.com/photo-1528823872057-9c018a7a7553?w=300&q=80" onclick="toggleBuilderItem(this)">
+                <img src="https://images.unsplash.com/photo-1528823872057-9c018a7a7553?w=300&q=80" alt="Cherry" />
+                <div class="builder-item-info"><div class="builder-item-name">Sato Nishiki</div><div class="builder-item-jp">佐藤錦</div><div class="builder-item-price">¥6,500 / box</div></div>
+              </div>
+              <div class="builder-item" data-name="Ruby Roman" data-jp="ルビーロマン" data-price="¥100,000" data-img="https://images.unsplash.com/photo-1523049673857-eb18f1d7b578?w=300&q=80" onclick="toggleBuilderItem(this)">
+                <img src="https://images.unsplash.com/photo-1523049673857-eb18f1d7b578?w=300&q=80" alt="Ruby Roman" />
+                <div class="builder-item-info"><div class="builder-item-name">Ruby Roman</div><div class="builder-item-jp">ルビーロマン</div><div class="builder-item-price">¥100,000 / bunch</div></div>
+              </div>
+            </div>
+          </div>
+          <!-- Dehydrated -->
+          <div>
+            <p class="builder-cat-title">Dehydrated Fruits · 乾燥果物</p>
+            <div class="builder-items">
+              <div class="builder-item" data-name="Dried Muscat" data-jp="乾燥マスカット" data-price="¥4,800" data-img="https://images.unsplash.com/photo-1537640538966-79f369143f8f?w=300&q=80" onclick="toggleBuilderItem(this)">
+                <img src="https://images.unsplash.com/photo-1537640538966-79f369143f8f?w=300&q=80" alt="Dried Muscat" style="filter:sepia(.5) brightness(.8)" />
+                <div class="builder-item-info"><div class="builder-item-name">Dried Muscat</div><div class="builder-item-jp">乾燥マスカット</div><div class="builder-item-price">¥4,800 / 50g</div></div>
+              </div>
+              <div class="builder-item" data-name="Peach Slices" data-jp="白桃ドライ" data-price="¥3,600" data-img="https://images.unsplash.com/photo-1510007532-98e7a935a13b?w=300&q=80" onclick="toggleBuilderItem(this)">
+                <img src="https://images.unsplash.com/photo-1510007532-98e7a935a13b?w=300&q=80" alt="Peach Slices" style="filter:sepia(.5) brightness(.8)" />
+                <div class="builder-item-info"><div class="builder-item-name">Peach Slices</div><div class="builder-item-jp">白桃ドライ</div><div class="builder-item-price">¥3,600 / 40g</div></div>
+              </div>
+              <div class="builder-item" data-name="Melon Bites" data-jp="メロンドライ" data-price="¥6,200" data-img="https://images.unsplash.com/photo-1571575173700-afb9492e6a50?w=300&q=80" onclick="toggleBuilderItem(this)">
+                <img src="https://images.unsplash.com/photo-1571575173700-afb9492e6a50?w=300&q=80" alt="Melon Bites" style="filter:sepia(.5) brightness(.8)" />
+                <div class="builder-item-info"><div class="builder-item-name">Melon Bites</div><div class="builder-item-jp">メロンドライ</div><div class="builder-item-price">¥6,200 / 35g</div></div>
+              </div>
+              <div class="builder-item" data-name="Strawberry Crisps" data-jp="苺フリーズドライ" data-price="¥2,800" data-img="https://images.unsplash.com/photo-1464965911861-746a04b4bca6?w=300&q=80" onclick="toggleBuilderItem(this)">
+                <img src="https://images.unsplash.com/photo-1464965911861-746a04b4bca6?w=300&q=80" alt="Strawberry Crisps" style="filter:sepia(.5) brightness(.8)" />
+                <div class="builder-item-info"><div class="builder-item-name">Strawberry Crisps</div><div class="builder-item-jp">苺フリーズドライ</div><div class="builder-item-price">¥2,800 / 30g</div></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Summary panel -->
+        <div class="gift-box-summary" id="boxSummary">
+          <p class="summary-title">Your Gift Box · あなたの贈り物</p>
+          <div class="summary-box-visual">
+            <div class="box-preview-grid" id="boxPreviewGrid">
+              <div class="box-preview-empty">+</div>
+              <div class="box-preview-empty">+</div>
+              <div class="box-preview-empty">+</div>
+              <div class="box-preview-empty">+</div>
+              <div class="box-preview-empty">+</div>
+              <div class="box-preview-empty">+</div>
+            </div>
+          </div>
+          <div class="summary-selected-list" id="summaryList">
+            <p class="summary-empty-msg">Your box is empty.<br>Select items from the left.</p>
+          </div>
+          <div class="summary-total" id="summaryTotal" style="display:none">
+            <span>Total</span>
+            <span id="totalPrice">¥0</span>
+          </div>
+          <button class="summary-cta" id="summaryCta" disabled>Select Items to Begin</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Pre-built gift sets -->
+    <div class="gift-sets">
+      <div class="section-header reveal" style="margin-bottom:0">
+        <div><p class="section-sub">Signature Sets · 定番ギフト</p><h2 class="section-title">Curated Gift<br><em>Collections</em></h2></div>
+      </div>
+      <p style="font-size:14px;color:rgba(240,228,200,.4);margin-top:16px;margin-bottom:56px;letter-spacing:.05em">Inspired by the Sembikiya tradition — Japan's most beloved fruit gift culture.</p>
+      <div class="gift-sets-grid">
+        <div class="gift-set-card">
+          <img src="https://images.unsplash.com/photo-1537640538966-79f369143f8f?w=700&q=90" alt="Signature Box" loading="lazy" />
+          <div class="gift-set-overlay"><span class="gift-set-label">Most Popular · 人気No.1</span><div class="gift-set-name">The Signature Box</div><div class="gift-set-contents">Shine Muscat · White Peach · Tochiotome<br>+ 2 Dehydrated selections</div><div class="gift-set-price">From ¥28,000</div></div>
+        </div>
+        <div class="gift-set-card">
+          <img src="https://images.unsplash.com/photo-1571575173700-afb9492e6a50?w=700&q=90" alt="Grand Collection" loading="lazy" />
+          <div class="gift-set-overlay"><span class="gift-set-label">Premium · 最高級</span><div class="gift-set-name">The Grand Collection</div><div class="gift-set-contents">Yubari Melon · Ruby Roman · Sato Nishiki<br>+ Full dehydrated assortment</div><div class="gift-set-price">From ¥148,000</div></div>
+        </div>
+        <div class="gift-set-card">
+          <img src="https://images.unsplash.com/photo-1610832958506-aa56368176cf?w=700&q=90" alt="Dehydrated Gift" loading="lazy" />
+          <div class="gift-set-overlay"><span class="gift-set-label">Year-Round · 季節を問わず</span><div class="gift-set-name">The Preserved Jewels</div><div class="gift-set-contents">6-piece dehydrated assortment<br>All 6 seasonal varieties</div><div class="gift-set-price">From ¥24,000</div></div>
+        </div>
+      </div>
+    </div>
+
+    <footer>
+      <div class="footer-top">
+        <div><div class="footer-brand-name">Jewelry Farm</div><div class="footer-brand-sub">ジュエリーファーム · Gift Atelier</div><p class="footer-desc">Japan's foremost cultivator of premium fruits since 1974.</p></div>
+        <div><p class="footer-col-title">Fresh Fruits</p><ul class="footer-links"><li><a href="#">Shine Muscat</a></li><li><a href="#">Yubari Melon</a></li><li><a href="#">White Peach</a></li></ul></div>
+        <div><p class="footer-col-title">Dehydrated</p><ul class="footer-links"><li><a href="#">Dried Range</a></li><li><a href="#">Freeze-Dried</a></li><li><a href="#">Gift Bags</a></li></ul></div>
+        <div><p class="footer-col-title">Gift Services</p><ul class="footer-links"><li><a href="#">Build Your Box</a></li><li><a href="#">Corporate Gifting</a></li><li><a href="#">International</a></li></ul></div>
+      </div>
+      <div class="footer-bottom">
+        <p class="footer-copy">© 2026 Jewelry Farm · All Rights Reserved</p>
+        <p class="footer-jp">自然の宝石 — 人生を豊かにする果物</p>
+      </div>
+    </footer>
+  </div>
+
+</div><!-- /mainContent -->
+
+<script>
+/* ════════════════════════════════
+   FRUIT DATA
+════════════════════════════════ */
+const FRUITS = [
+  {
+    label:'Shine Muscat', labelJp:'シャインマスカット', sub:'OKAYAMA · シャインマスカット',
+    price:'From ¥12,800 / bunch', origin:'Okayama Prefecture · 岡山', tag:'Limited Reserve · 限定品',
+    theme:'theme-muscat',
+    atmos:'rgba(8,24,14,0.92)',
+    bgImg:'https://images.unsplash.com/photo-1537640538966-79f369143f8f?w=1800&q=90',
+    fruitImg:'https://images.unsplash.com/photo-1537640538966-79f369143f8f?w=700&q=90',
+    accentColor:'#5a9a6a',
+    chapters:[
+      { tag:'Okayama · 岡山 — Chapter I', headline:['Translucent','<em>as Jade</em>'], body:'Each Shine Muscat grape is grown inside individual paper bags — shielding the skin from sunburn and insect contact, producing the legendary luminescent green hue and near-invisible skin.', jp:'一粒一粒、袋掛けで育てられた翡翠の輝き', bg:'https://images.unsplash.com/photo-1537640538966-79f369143f8f?w=1800&q=90', wash:'rgba(8,24,14,.78)' },
+      { tag:'Okayama · 岡山 — Chapter II', headline:['26° Brix,','<em>Pure Sweetness</em>'], body:'At peak ripeness, Shine Muscat registers an extraordinary 26 degrees on the Brix scale — nearly twice the sweetness of ordinary grapes. Floral, honeyed, and lingering.', jp:'糖度26度 — 自然が生み出す究極の甘さ', bg:'https://images.unsplash.com/photo-1523049673857-eb18f1d7b578?w=1800&q=90', wash:'rgba(10,28,16,.80)' },
+      { tag:'Okayama · 岡山 — Chapter III', headline:['Eight Weeks,','<em>One Season</em>'], body:'Available for only eight weeks each autumn. Each bunch arrives nestled in a silk-lined paulownia box, sealed with the Jewelry Farm crest — a jewel worthy of the occasion.', jp:'年に一度の贈り物 — 桐箱に収められた秋の宝石', bg:'https://images.unsplash.com/photo-1567306226416-28f0efdc88ce?w=1800&q=90', wash:'rgba(12,30,18,.82)' }
+    ]
+  },
+  {
+    label:'Yubari King', labelJp:'夕張メロン', sub:'HOKKAIDO · 夕張メロン',
+    price:'From ¥30,000 / piece', origin:'Hokkaido Prefecture · 北海道', tag:'Hokkaido · 北海道',
+    theme:'theme-melon',
+    atmos:'rgba(38,20,6,0.92)',
+    bgImg:'https://images.unsplash.com/photo-1571575173700-afb9492e6a50?w=1800&q=90',
+    fruitImg:'https://images.unsplash.com/photo-1571575173700-afb9492e6a50?w=700&q=90',
+    accentColor:'#c47a2a',
+    chapters:[
+      { tag:'Hokkaido · 北海道 — Chapter I', headline:['Born from','<em>Volcanic Soil</em>'], body:"Yubari's mineral-rich volcanic earth gives the King Melon its unmatched depth of flavour. Every melon is grown in heated greenhouses and shaped by hand into its perfect sphere.", jp:'火山性土壌が育む — 北海道・夕張の大地の恵み', bg:'https://images.unsplash.com/photo-1571575173700-afb9492e6a50?w=1800&q=90', wash:'rgba(38,20,6,.80)' },
+      { tag:'Hokkaido · 北海道 — Chapter II', headline:['The Net,','<em>Nature\'s Signature</em>'], body:"The fine netting covering Yubari King's skin is not decorative — it is the fruit speaking. Only melons with an even, unbroken net pass inspection.", jp:'網目模様 — 高い糖度が刻む天然の証明', bg:'https://images.unsplash.com/photo-1563746924237-f81d5c054f30?w=1800&q=90', wash:'rgba(44,22,5,.82)' },
+      { tag:'Hokkaido · 北海道 — Chapter III', headline:['¥3,000,000','<em>at Auction</em>'], body:"In 2019, a single pair of Yubari King Melons fetched ¥3 million at Sapporo's first harvest auction. Our annual allocation is reserved months in advance.", jp:'競売最高額300万円 — 世界で最も高貴なメロン', bg:'https://images.unsplash.com/photo-1571575173700-afb9492e6a50?w=1800&q=90', wash:'rgba(40,18,4,.84)' }
+    ]
+  },
+  {
+    label:'Tochiotome', labelJp:'とちおとめ', sub:'TOCHIGI · とちおとめ',
+    price:'From ¥4,500 / pack', origin:'Tochigi Prefecture · 栃木', tag:'Tochigi · 栃木',
+    theme:'theme-strawberry',
+    atmos:'rgba(48,6,12,0.92)',
+    bgImg:'https://images.unsplash.com/photo-1464965911861-746a04b4bca6?w=1800&q=90',
+    fruitImg:'https://images.unsplash.com/photo-1464965911861-746a04b4bca6?w=700&q=90',
+    accentColor:'#c43048',
+    chapters:[
+      { tag:'Tochigi · 栃木 — Chapter I', headline:['Crimson','<em>Through & Through</em>'], body:'Unlike ordinary strawberries that are white at the core, Tochiotome carries its deep crimson all the way to the centre — a visual promise of the concentrated sweetness within.', jp:'中心まで真っ赤 — とちおとめの誇り', bg:'https://images.unsplash.com/photo-1464965911861-746a04b4bca6?w=1800&q=90', wash:'rgba(48,6,12,.80)' },
+      { tag:'Tochigi · 栃木 — Chapter II', headline:['Harvested','<em>Before Dawn</em>'], body:'Our Tochiotome farmers begin picking between 4am and 7am, when the berries are coolest and firmest. Each fruit is packed and chilled within the hour of harvest.', jp:'夜明けの収穫 — 鮮度を守る職人の選択', bg:'https://images.unsplash.com/photo-1587393855524-087f83d95bc9?w=1800&q=90', wash:'rgba(52,8,16,.80)' },
+      { tag:'Tochigi · 栃木 — Chapter III', headline:['Twelve Berries.','<em>One Perfect Box.</em>'], body:'Every Jewelry Farm Tochiotome box contains exactly twelve hand-graded fruits, matched in size and lustre — presented in lacquered gift case lined with Japanese washi paper.', jp:'12粒の完璧 — 漆塗り箱に収めた至高の苺', bg:'https://images.unsplash.com/photo-1464965911861-746a04b4bca6?w=1800&q=90', wash:'rgba(46,6,10,.82)' }
+    ]
+  },
+  {
+    label:'White Peach', labelJp:'白桃', sub:'OKAYAMA · 白桃',
+    price:'From ¥8,000 / piece', origin:'Okayama Prefecture · 岡山', tag:'Okayama · 岡山',
+    theme:'theme-white-peach',
+    atmos:'rgba(40,16,24,0.92)',
+    bgImg:'https://images.unsplash.com/photo-1510007532-98e7a935a13b?w=1800&q=90',
+    fruitImg:'https://images.unsplash.com/photo-1510007532-98e7a935a13b?w=700&q=90',
+    accentColor:'#c4856a',
+    chapters:[
+      { tag:'Okayama · 岡山 — Chapter I', headline:['Porcelain','<em>Skin</em>'], body:"The White Peach owes its near-translucent, flawless skin to decades of selective cultivation and individual bag-wrapping weeks before harvest. Every fruit is a small act of devotion.", jp:'白磁のような肌 — 丹精込めた袋掛け栽培', bg:'https://images.unsplash.com/photo-1510007532-98e7a935a13b?w=1800&q=90', wash:'rgba(253,248,243,.65)' },
+      { tag:'Okayama · 岡山 — Chapter II', headline:['Floral,','<em>Honeyed, Fleeting</em>'], body:'The aroma of a ripe White Peach — rose, jasmine, warm honey — announces itself before the first bite. The flesh dissolves almost before it can be tasted, leaving only fragrance.', jp:'花の香りと蜜の甘さ — 口に入れる前から始まる体験', bg:'https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?w=1800&q=90', wash:'rgba(250,245,240,.65)' },
+      { tag:'Okayama · 岡山 — Chapter III', headline:['A Window','<em>of Four Days</em>'], body:'Once at peak ripeness, the White Peach has a window of only four days. We ship each piece the morning after harvest, packed in a velvet cradle with temperature-controlled insulation.', jp:'たった4日間の奇跡 — 最高の瞬間をお届けする使命', bg:'https://images.unsplash.com/photo-1519996529931-28324d5a630e?w=1800&q=90', wash:'rgba(253,248,243,.65)' }
+    ]
+  }
+];
+
+/* ════════════════════════════════
+   STATE
+════════════════════════════════ */
+let current = 0, fruitSelected = false, isDragging = false, dragStartX = 0, dragDelta = 0, trackOffset = 0;
+const N = FRUITS.length;
+let currentMode = 'fresh'; // 'fresh' | 'dehydrated' | 'gift'
+
+/* ════════════════════════════════
+   MODE SWITCHING
+════════════════════════════════ */
+function setMode(mode) {
+  currentMode = mode;
+  // Remove all mode classes
+  document.body.classList.remove('mode-gift','mode-dehydrated','fruit-selected');
+  // Remove fruit themes
+  FRUITS.forEach(f => document.body.classList.remove(f.theme));
+  fruitSelected = false;
+
+  if (mode === 'gift') {
+    document.body.classList.add('mode-gift');
+    document.getElementById('heroModeBadge').textContent = 'Gift Collection · 贈り物';
+  } else if (mode === 'dehydrated') {
+    document.body.classList.add('mode-dehydrated');
+    document.getElementById('heroModeBadge').textContent = 'Dehydrated Collection · 乾燥果物';
+  } else {
+    document.getElementById('heroModeBadge').textContent = 'Fresh Collection · 生の果物';
+  }
+
+  // Update nav tabs
+  document.querySelectorAll('.mode-tab').forEach(t => t.classList.remove('active'));
+  document.getElementById('tab-'+mode)?.classList.add('active');
+
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function goHome() {
+  exitFruitMode();
+  setMode('fresh');
+}
+
+/* ════════════════════════════════
+   HERO CAROUSEL
+════════════════════════════════ */
+const track = document.getElementById('heroTrack');
+const atmosEl = document.getElementById('heroAtmos');
+const labelTextEl = document.getElementById('heroLabelText');
+const heroSubEl = document.getElementById('heroSub');
+const metaPriceEl = document.getElementById('metaPrice');
+const metaOriginEl = document.getElementById('metaOrigin');
+const heroMetaEl = document.getElementById('heroMeta');
+const VW = () => window.innerWidth;
+
+const realSlides = Array.from(document.querySelectorAll('.hero-slide'));
+const cloneFirst = realSlides[0].cloneNode(true);
+const cloneLast = realSlides[N-1].cloneNode(true);
+cloneFirst.classList.remove('active'); cloneLast.classList.remove('active');
+track.appendChild(cloneFirst);
+track.insertBefore(cloneLast, realSlides[0]);
+const allSlides = Array.from(track.querySelectorAll('.hero-slide'));
+function domIndexFor(i) { return i + 1; }
+
+function positionTrack(i, animate) {
+  const offset = -(domIndexFor(i)) * VW();
+  if (animate) {
+    track.classList.add('snapping');
+    track.style.transform = `translateX(${offset}px)`;
+    setTimeout(() => track.classList.remove('snapping'), 580);
+  } else {
+    track.classList.remove('snapping');
+    track.style.transform = `translateX(${offset}px)`;
+  }
+  trackOffset = offset;
+}
+
+function setAtmos(idx) { atmosEl.style.background = FRUITS[idx].atmos; }
+
+function switchLabel(idx) {
+  const f = FRUITS[idx];
+  labelTextEl.classList.add('switching'); heroSubEl.classList.add('switching'); heroMetaEl.classList.add('switching');
+  setTimeout(() => {
+    labelTextEl.textContent = f.label; heroSubEl.textContent = f.sub;
+    metaPriceEl.textContent = f.price; metaOriginEl.textContent = f.origin;
+    labelTextEl.classList.remove('switching'); heroSubEl.classList.remove('switching'); heroMetaEl.classList.remove('switching');
+  }, 280);
+}
+
+function activateSlide(idx) {
+  allSlides.forEach(s => s.classList.remove('active'));
+  allSlides[domIndexFor(idx)].classList.add('active');
+}
+
+function snapTo(idx, enterFruit) {
+  let domTarget = domIndexFor(idx);
+  if (idx < 0) domTarget = 0;
+  else if (idx >= N) domTarget = N + 1;
+  const offset = -domTarget * VW();
+  track.classList.add('snapping');
+  track.style.transform = `translateX(${offset}px)`;
+  trackOffset = offset;
+  const realIdx = ((idx % N) + N) % N;
+  setTimeout(() => {
+    track.classList.remove('snapping'); current = realIdx;
+    positionTrack(realIdx, false); activateSlide(realIdx);
+  }, 580);
+  setAtmos(realIdx); switchLabel(realIdx);
+  if (fruitSelected || enterFruit) setTimeout(() => enterFruitMode(realIdx), 600);
+}
+
+const heroEl = document.getElementById('hero');
+function dragStart(x) { isDragging = true; dragStartX = x; dragDelta = 0; track.classList.remove('snapping'); }
+function dragMove(x) { if (!isDragging) return; dragDelta = x - dragStartX; track.style.transform = `translateX(${trackOffset + dragDelta}px)`; }
+function dragEnd() {
+  if (!isDragging) return; isDragging = false;
+  const threshold = VW() * 0.18;
+  if (Math.abs(dragDelta) > threshold) snapTo(current + (dragDelta < 0 ? 1 : -1), false);
+  else { track.classList.add('snapping'); track.style.transform = `translateX(${trackOffset}px)`; setTimeout(() => track.classList.remove('snapping'), 580); }
+}
+heroEl.addEventListener('mousedown', e => dragStart(e.clientX));
+window.addEventListener('mousemove', e => { if (isDragging) dragMove(e.clientX); });
+window.addEventListener('mouseup', dragEnd);
+heroEl.addEventListener('touchstart', e => dragStart(e.touches[0].clientX), { passive: true });
+heroEl.addEventListener('touchmove', e => { if (isDragging) dragMove(e.touches[0].clientX); }, { passive: true });
+heroEl.addEventListener('touchend', dragEnd);
+document.getElementById('arrowPrev').addEventListener('click', () => snapTo(current - 1, false));
+document.getElementById('arrowNext').addEventListener('click', () => snapTo(current + 1, false));
+document.querySelector('.center-btn').addEventListener('click', () => enterFruitMode(current));
+document.addEventListener('selectstart', e => { if (isDragging) e.preventDefault(); });
+activateSlide(0); positionTrack(0, false); setAtmos(0);
+
+/* ════════════════════════════════
+   FRUIT MODE — enter / exit
+════════════════════════════════ */
+const THEME_CLASSES = FRUITS.map(f => f.theme);
+
+function enterFruitMode(idx) {
+  fruitSelected = true;
+  // Remove all fruit themes + mode classes
+  document.body.classList.remove('mode-gift','mode-dehydrated');
+  THEME_CLASSES.forEach(c => document.body.classList.remove(c));
+  document.body.classList.add('fruit-selected', FRUITS[idx].theme);
+  buildFruitPage(idx);
+  setTimeout(() => document.getElementById('mainContent').scrollIntoView({ behavior: 'smooth' }), 100);
+}
+
+function exitFruitMode() {
+  fruitSelected = false;
+  document.body.classList.remove('fruit-selected');
+  THEME_CLASSES.forEach(c => document.body.classList.remove(c));
+  document.body.classList.remove('mode-gift','mode-dehydrated');
+  // Reset mode tabs
+  document.querySelectorAll('.mode-tab').forEach(t => t.classList.remove('active'));
+  document.getElementById('tab-fresh')?.classList.add('active');
+  currentMode = 'fresh';
+  document.getElementById('heroModeBadge').textContent = 'Fresh Collection · 生の果物';
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function buildFruitPage(idx) {
+  const f = FRUITS[idx];
+  const fp = document.getElementById('fruitPage');
+
+  // White peach: chapter wash overrides need light vignette direction
+  const isLight = f.theme === 'theme-white-peach';
+
+  let chaptersHTML = f.chapters.map((ch, i) => `
+    <div class="feature-chapter" data-ch="${i}">
+      <div class="chapter-bg" style="background-image:url('${ch.bg}')"></div>
+      <div class="chapter-color-wash" style="background:${ch.wash}"></div>
+      <div class="chapter-vignette"></div>
+      <div class="chapter-content">
+        <span class="chapter-tag">${ch.tag}</span>
+        <h2 class="chapter-headline">${ch.headline.join('<br>')}</h2>
+        <p class="chapter-body">${ch.body}</p>
+        <p class="chapter-jp">${ch.jp}</p>
+      </div>
+      <div class="chapter-fruit-wrap">
+        <img src="${f.fruitImg}" alt="${f.label}" />
+      </div>
+    </div>
+  `).join('');
+
+  fp.innerHTML = `
+    <div class="fruit-hero-panel">
+      <div class="fruit-hero-bg" style="background-image:url('${f.bgImg}')"></div>
+      <div class="fruit-hero-wash" style="background:${f.atmos}"></div>
+      <div class="fruit-hero-vignette"></div>
+      <div class="fruit-hero-content">
+        <div class="fruit-hero-tag">${f.tag}</div>
+        <div class="fruit-hero-name">${f.heroName || f.label}<br><em>${f.labelJp}</em></div>
+        <div class="fruit-hero-jp">${f.origin}</div>
+        <div class="fruit-hero-price" style="color:${f.accentColor}">${f.price}</div>
+      </div>
+    </div>
+    ${chaptersHTML}
+    <div class="view-all-cta">
+      <div class="cta-divider"></div>
+      <span class="cta-label">The Full Collection · 全品目</span>
+      <h2 class="cta-title">Discover Every<br><em>Jewel We Grow</em></h2>
+      <p class="cta-sub">すべての果物をご覧ください</p>
+      <button class="cta-btn" onclick="exitFruitMode()">View All Products</button>
+    </div>
+    <footer>
+      <div class="footer-top">
+        <div><div class="footer-brand-name">Jewelry Farm</div><div class="footer-brand-sub">ジュエリーファーム · Premium Fruit Atelier</div><p class="footer-desc">Japan's foremost cultivator of premium fruits since 1974.</p></div>
+        <div><p class="footer-col-title">Catalogue</p><ul class="footer-links"><li><a href="#">Grapes & Muscat</a></li><li><a href="#">Musk Melons</a></li><li><a href="#">Stone Fruits</a></li><li><a href="#">Strawberries</a></li></ul></div>
+        <div><p class="footer-col-title">Gift Services</p><ul class="footer-links"><li><a href="#">Corporate Gifting</a></li><li><a href="#">Seasonal Boxes</a></li><li><a href="#">International Delivery</a></li></ul></div>
+        <div><p class="footer-col-title">Company</p><ul class="footer-links"><li><a href="#">Our Philosophy</a></li><li><a href="#">Farm Visits</a></li><li><a href="#">Contact Us</a></li></ul></div>
+      </div>
+      <div class="footer-bottom">
+        <p class="footer-copy">© 2026 Jewelry Farm · All Rights Reserved</p>
+        <p class="footer-jp">自然の宝石 — 人生を豊かにする果物</p>
+      </div>
+    </footer>
+  `;
+  fp.querySelectorAll('.feature-chapter').forEach(ch => chapterObs.observe(ch));
+}
+
+/* ════════════════════════════════
+   OBSERVERS
+════════════════════════════════ */
+const chapterObs = new IntersectionObserver(entries => {
+  entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('in-view'); });
+}, { threshold: 0.25 });
+
+const revealObs = new IntersectionObserver(entries => {
+  entries.forEach(e => { if (e.isIntersecting) { setTimeout(() => e.target.classList.add('visible'), 100); revealObs.unobserve(e.target); } });
+}, { threshold: 0.12 });
+document.querySelectorAll('.reveal').forEach(el => revealObs.observe(el));
+
+/* ════════════════════════════════
+   NAV SCROLL
+════════════════════════════════ */
+window.addEventListener('scroll', () => {
+  document.getElementById('mainNav').classList.toggle('scrolled', window.scrollY > 60);
+});
+
+/* ════════════════════════════════
+   CURSOR
+════════════════════════════════ */
+const cursorEl = document.getElementById('cursor');
+const ringEl = document.getElementById('cursorRing');
+const isHoverDevice = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
+let mx = 0, my = 0, rx = 0, ry = 0;
+if (isHoverDevice) {
+document.addEventListener('mousemove', e => {
+  mx = e.clientX; my = e.clientY;
+  cursorEl.style.left = mx+'px'; cursorEl.style.top = my+'px';
+});
+(function animRing() {
+  rx += (mx-rx)*.1; ry += (my-ry)*.1;
+  ringEl.style.left = rx+'px'; ringEl.style.top = ry+'px';
+  requestAnimationFrame(animRing);
+})();
+document.querySelectorAll('a,button,.fruit-card,.season-item,.showcase-panel,.builder-item,.gift-set-card,.dehyd-card').forEach(el => {
+  el.addEventListener('mouseenter', () => ringEl.classList.add('expanded'));
+  el.addEventListener('mouseleave', () => ringEl.classList.remove('expanded'));
+});
+}
+
+/* ════════════════════════════════
+   GIFT BUILDER
+════════════════════════════════ */
+let selectedItems = [];
+const MAX_ITEMS = 6;
+
+function toggleBuilderItem(el) {
+  const name = el.dataset.name;
+  const jp = el.dataset.jp;
+  const price = parseInt(el.dataset.price.replace(/[¥,]/g,''));
+  const img = el.dataset.img;
+
+  if (el.classList.contains('selected')) {
+    el.classList.remove('selected');
+    selectedItems = selectedItems.filter(i => i.name !== name);
+  } else {
+    if (selectedItems.length >= MAX_ITEMS) {
+      el.style.animation = 'none'; el.offsetHeight;
+      el.style.border = '2px solid #c43048';
+      setTimeout(() => { el.style.border = ''; }, 1200);
+      return;
+    }
+    el.classList.add('selected');
+    selectedItems.push({ name, jp, price, img });
+  }
+  updateBoxSummary();
+}
+
+function updateBoxSummary() {
+  const list = document.getElementById('summaryList');
+  const total = document.getElementById('summaryTotal');
+  const totalPrice = document.getElementById('totalPrice');
+  const cta = document.getElementById('summaryCta');
+  const preview = document.getElementById('boxPreviewGrid');
+
+  // Update preview grid
+  preview.innerHTML = '';
+  for (let i = 0; i < MAX_ITEMS; i++) {
+    if (selectedItems[i]) {
+      preview.innerHTML += `<div class="box-preview-item"><img src="${selectedItems[i].img}" alt="${selectedItems[i].name}" /></div>`;
+    } else {
+      preview.innerHTML += `<div class="box-preview-empty">+</div>`;
+    }
+  }
+
+  if (selectedItems.length === 0) {
+    list.innerHTML = '<p class="summary-empty-msg">Your box is empty.<br>Select items from the left.</p>';
+    total.style.display = 'none';
+    cta.disabled = true; cta.textContent = 'Select Items to Begin';
+    return;
+  }
+
+  let totalVal = 0;
+  list.innerHTML = selectedItems.map(i => {
+    totalVal += i.price;
+    return `<div class="summary-item"><span>${i.name}<br><small style="font-size:10px;font-family:'Shippori Mincho',serif;letter-spacing:.1em;color:rgba(240,228,200,.4)">${i.jp}</small></span><span>¥${i.price.toLocaleString()}</span></div>`;
+  }).join('');
+  // Add paulownia box fee
+  totalVal += 3000;
+  list.innerHTML += `<div class="summary-item"><span>Paulownia Box & Packaging</span><span>¥3,000</span></div>`;
+
+  total.style.display = 'flex';
+  totalPrice.textContent = `¥${totalVal.toLocaleString()}`;
+  cta.disabled = false;
+  cta.textContent = `Order My Box (${selectedItems.length}/${MAX_ITEMS} items)`;
+}
+
+/* ════════════════════════════════
+   CONTACT WIDGET
+════════════════════════════════ */
+let contactOpen = false;
+function toggleContact() {
+  contactOpen = !contactOpen;
+  document.getElementById('contactBubbles').classList.toggle('open', contactOpen);
+  document.getElementById('contactToggle').classList.toggle('open', contactOpen);
+}
+// Close on outside click
+document.addEventListener('click', e => {
+  if (contactOpen && !document.getElementById('contactWidget').contains(e.target)) {
+    contactOpen = false;
+    document.getElementById('contactBubbles').classList.remove('open');
+    document.getElementById('contactToggle').classList.remove('open');
+  }
+});
+
+/* ════════════════════════════════
+   AI CHATBOT
+════════════════════════════════ */
+let chatOpen = false;
+const CHAT_RESPONSES = {
+  default: [
+    "At Jewelry Farm, every fruit is selected from Japan's most celebrated growing regions and graded by hand — only the top 1% of each harvest earns our seal.",
+    "Our fruits are cultivated with the philosophy of monozukuri — the Japanese art of making things with total devotion. Each piece is inspected for Brix levels, skin luminosity, and structural perfection.",
+    "Would you like to explore a specific fruit, learn about gift options, or find out what's currently in season?"
+  ],
+  season: [
+    "Currently at peak season: Shine Muscat (Okayama), Ruby Roman Grapes (Ishikawa), and Sun Egg Mango (Miyazaki). Our White Peach from Okayama has a very limited 4-day window — we recommend pre-ordering.",
+    "Summer brings some of our most extraordinary offerings — the Yubari Melon and Ruby Roman Grapes are available for pre-order now. Shall I tell you more about any of these?"
+  ],
+  special: [
+    "What makes Jewelry Farm unique is threefold: our sourcing (direct from certified micro-climate growers), our grading (Brix, weight, skin perfection — all measured by hand), and our presentation (lacquered paulownia gift boxes with silk cushioning).",
+    "Each fruit is essentially a living jewel — cultivated with the same precision a master jeweler applies to a gemstone. The Shine Muscat, for example, is grown inside individual paper bags to protect its skin from any imperfection."
+  ],
+  gift: [
+    "We offer three gift tiers: The Signature Box (from ¥28,000) with Shine Muscat, White Peach, and Tochiotome; The Grand Collection (from ¥148,000) featuring our most exclusive varieties; and our Preserved Jewels box with our full dehydrated range.\n\nYou can also build your own custom mix in our Gift Mode — fresh and dehydrated fruits combined in a single lacquered box.",
+    "Corporate gifting is one of our specialties. We handle volumes from 10 to 10,000 boxes with personalised cards and custom branding. Shall I connect you to our gifting team?"
+  ],
+  shipping: [
+    "We ship domestically across Japan with next-day delivery for most prefectures. International shipping is available to selected destinations — USA, UK, Hong Kong, Singapore, and Taiwan — with temperature-controlled packaging.",
+    "All fresh fruits are shipped the morning after harvest in temperature-controlled insulation. Our dehydrated range ships worldwide with a 12-month shelf life."
+  ]
+};
+
+function getResponse(msg) {
+  const m = msg.toLowerCase();
+  if (m.includes('season') || m.includes('now') || m.includes('available')) return CHAT_RESPONSES.season[Math.floor(Math.random()*CHAT_RESPONSES.season.length)];
+  if (m.includes('special') || m.includes('different') || m.includes('unique') || m.includes('why')) return CHAT_RESPONSES.special[Math.floor(Math.random()*CHAT_RESPONSES.special.length)];
+  if (m.includes('gift') || m.includes('present') || m.includes('box') || m.includes('set')) return CHAT_RESPONSES.gift[Math.floor(Math.random()*CHAT_RESPONSES.gift.length)];
+  if (m.includes('ship') || m.includes('deliver') || m.includes('international') || m.includes('overseas')) return CHAT_RESPONSES.shipping[Math.floor(Math.random()*CHAT_RESPONSES.shipping.length)];
+  return CHAT_RESPONSES.default[Math.floor(Math.random()*CHAT_RESPONSES.default.length)];
+}
+
+function addMsg(text, type) {
+  const msgs = document.getElementById('chatMessages');
+  const div = document.createElement('div');
+  div.className = `chat-msg ${type}`;
+  div.textContent = text;
+  msgs.appendChild(div);
+  msgs.scrollTop = msgs.scrollHeight;
+}
+
+function showTyping() {
+  const msgs = document.getElementById('chatMessages');
+  const div = document.createElement('div');
+  div.className = 'chat-typing'; div.id = 'typingIndicator';
+  div.innerHTML = '<span></span><span></span><span></span>';
+  msgs.appendChild(div); msgs.scrollTop = msgs.scrollHeight;
+  return div;
+}
+
+function sendChat() {
+  const input = document.getElementById('chatInput');
+  const text = input.value.trim();
+  if (!text) return;
+  addMsg(text, 'user');
+  input.value = '';
+  document.getElementById('quickReplies').style.display = 'none';
+  const typing = showTyping();
+  setTimeout(() => {
+    typing.remove();
+    addMsg(getResponse(text), 'bot');
+  }, 900 + Math.random()*600);
+}
+
+function sendQuick(text) {
+  document.getElementById('chatInput').value = text;
+  sendChat();
+}
+
+function toggleChat() {
+  chatOpen = !chatOpen;
+  document.getElementById('chatWindow').classList.toggle('open', chatOpen);
+  document.getElementById('chatBadge').style.display = 'none';
+  if (chatOpen && document.getElementById('chatMessages').children.length === 0) {
+    setTimeout(() => {
+      const typing = showTyping();
+      setTimeout(() => {
+        typing.remove();
+        addMsg('Welcome to Jewelry Farm. I can help you discover our fruits, explore gift options, or learn about our cultivation philosophy. What would you like to know?', 'bot');
+      }, 1000);
+    }, 300);
+  }
+}
+</script>
+</body>
+</html>
